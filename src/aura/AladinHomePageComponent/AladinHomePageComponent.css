@@ -1,0 +1,14 @@
+.THIS .Branch {
+    justify-content: center;
+}
+
+.THIS .Branch-Detail{
+    border: 2px solid #1d80c7;
+    width: 180px;
+    text-align: center;
+    margin: 1px;
+}
+
+.THIS .BookByBranch-td {
+
+}
