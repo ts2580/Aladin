@@ -1,0 +1,28 @@
+<!--
+ - Created by 한성진 on 2022-11-15.
+ -->
+
+<aura:component controller="AladinHomePageComponentController"
+                description="BranchBookRefreshButton"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+                access="global">
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <body>
+        <div class="slds-box_x-small slds-theme_shade slds-clearfix slds-border_top slds-border_right slds-border_left slds-border_bottom">
+            <div class="slds-float_left">
+                <lightning:card iconName="standard:knowledge" title="지점별 재고관련 갱신" class="slds-theme_shade">
+                </lightning:card>
+            </div>
+            <div class="slds-float_right">
+                <lightning:buttonGroup>
+                    <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBook2}"/>
+                    <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrice2}"/>
+                </lightning:buttonGroup>
+            </div>
+        </div>
+    </body>
+
+
+</aura:component>
