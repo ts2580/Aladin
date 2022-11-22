@@ -1,0 +1,3 @@
+<apex:page standardController="Dev_bookbyvolume__x">
+    <apex:image value="{!Dev_bookbyvolume__x.Cover__c}"/>
+</apex:page>
