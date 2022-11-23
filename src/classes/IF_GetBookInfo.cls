@@ -13,7 +13,7 @@ public with sharing class IF_GetBookInfo {
                 FROM Book__c
                 WHERE f_Order__c >=: StartNum
                 AND f_Order__c <: ENDNum];
-        List<BookByVolume__c> ListBookByVolume = new List<BookByVolume__c>();
+        List<bookbyvolume__x> ListBookByVolume = new List<bookbyvolume__x>();
 
         for(Book__c LB : ListBooks){
 
@@ -42,31 +42,32 @@ public with sharing class IF_GetBookInfo {
 
                         BookMap = (Map<String, Object>) objectBook;
 
-                        BookByVolume__c BookByVolume = new BookByVolume__c();
+                        bookbyvolume__x BookByVolume = new bookbyvolume__x();
                         String BookName = (String)BookMap.get('title');
                         if(BookName.length() > 70){
                             BookName = BookName.substring(0, 50);
                         }
-                        BookByVolume.Name = BookName;
-                        BookByVolume.ISBN13__c = (String) BookMap.get('isbn13');
+                        BookByVolume.name__c = BookName;
+                        BookByVolume.isbn13__c = (String) BookMap.get('isbn13');
                         price = (Integer) BookMap.get('priceSales');
-                        BookByVolume.Price__c = String.valueOf(price);
+                        BookByVolume.price__c = String.valueOf(price);
 
                         String NormalCover = (String) BookMap.get('cover');
 
-                        BookByVolume.Cover__c = NormalCover.replace('cover','cover500');
-                        BookByVolume.Book__c = LB.Id;
+                        BookByVolume.cover__c = NormalCover.replace('cover','cover500');
+                        BookByVolume.book__c = LB.Id;
+                        BookByVolume.type__c = LB.Type__c;
 
                         if(LB.Cover__c == null){
-                            LB.Cover__c = BookByVolume.Cover__c;
+                            LB.Cover__c = BookByVolume.cover__c;
                         }
 
                         if(LB.Type__c == '만화' || LB.Type__c == '라노벨'){
-                            BookByVolume.Volume__c = Integer.valueOf(TotalVolume);
+                            BookByVolume.volume__c = Integer.valueOf(TotalVolume);
                             TotalVolume--;
                         }
 
-                        String searchName = BookByVolume.Name;
+                        String searchName = BookByVolume.name__c;
                         Boolean result = searchName.contains(LB.Name);
 
                         if(result){
@@ -79,7 +80,6 @@ public with sharing class IF_GetBookInfo {
         }
 
         update ListBooks;
-        insert ListBookByVolume;
+        Database.insertAsync(ListBookByVolume);
     }
-
 }

@@ -8,19 +8,19 @@ public with sharing class IF_InsertLatestBook {
 
         IF_Util IF_Util = new IF_Util();
         Map<String, Object> BookMap = new Map<String, Object>();
-        List<BookByVolume__c> ListBooks = [
-                SELECT Id, ISBN13__c, Name, Price__c, Cover__c
-                FROM BookByVolume__c
-                WHERE f_order__c >=: StartNum
-                AND f_order__c <: ENDNum];
+        List<bookByVolume__x> ListBooks = [
+                SELECT Id, isbn13__c, name__c, price__c, cover__c
+                FROM bookByVolume__x
+                WHERE seq__c >=: StartNum
+                AND seq__c <: ENDNum];
 
-        for(BookByVolume__c BBV : ListBooks){
+        for(bookByVolume__x BBV : ListBooks){
 
             Integer TotalVolume;
 
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint(IF_Util.getBookInfoURL(BBV.Name));
+            request.setEndpoint(IF_Util.getBookInfoURL(BBV.name__c));
             request.setMethod('GET');
             HttpResponse response = http.send(request);
 
@@ -42,17 +42,17 @@ public with sharing class IF_InsertLatestBook {
                     if(BookName.length() > 70){
                         BookName = BookName.substring(0, 50);
                     }
-                    BBV.Name = BookName;
-                    BBV.ISBN13__c = (String) BookMap.get('isbn13');
+                    BBV.name__c = BookName;
+                    BBV.isbn13__c = (String) BookMap.get('isbn13');
                     price = (Integer) BookMap.get('priceSales');
-                    BBV.Price__c = String.valueOf(price);
+                    BBV.price__c = String.valueOf(price);
 
                     String NormalCover = (String) BookMap.get('cover');
 
-                    BBV.Cover__c = NormalCover.replace('cover','cover500');
+                    BBV.cover__c = NormalCover.replace('cover','cover500');
                 }
             }
         }
-        update ListBooks;
+        Database.updateAsync(ListBooks);
     }
 }

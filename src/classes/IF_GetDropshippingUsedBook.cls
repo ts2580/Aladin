@@ -9,12 +9,12 @@ public with sharing class IF_GetDropshippingUsedBook {
 
         IF_Util IF_Util = new IF_Util();
 
-        List<BookByVolume__c> ListBooks = [
-                SELECT ISBN13__c, Name, Book__c
-                FROM BookByVolume__c
-                WHERE IsPurchased__c = FALSE
-                AND f_order__c >=: StartNum
-                AND f_order__c <: ENDNum];
+        List<bookByVolume__x> ListBooks = [
+                SELECT isbn13__c, name__c, book__c
+                FROM bookByVolume__x
+                WHERE ispurched__c = FALSE
+                AND seq__c >=: StartNum
+                AND seq__c <: ENDNum];
         List<BranchBook__c> ListBranchBook = new List<BranchBook__c>();
         List<Object> Books = new List<Object>();
 
@@ -23,11 +23,11 @@ public with sharing class IF_GetDropshippingUsedBook {
         Map<String, Object> spaceUsed = new Map<String, Object>();
         Map<String, String> ParamMap = new Map<String, String>();
 
-        for(BookByVolume__c BBV : ListBooks){
+        for(bookByVolume__x BBV : ListBooks){
 
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint(IF_Util.getDropshippingUsedBookURL(BBV.ISBN13__c));
+            request.setEndpoint(IF_Util.getDropshippingUsedBookURL(BBV.isbn13__c));
             request.setMethod('GET');
             HttpResponse response = http.send(request);
 
@@ -49,9 +49,10 @@ public with sharing class IF_GetDropshippingUsedBook {
                 if(IsDropShipping != 0 && IsDropShipping != null){
 
                     BranchBook__c BranchBook = new BranchBook__c();
-                    BranchBook.Name = BBV.Name;
+                    BranchBook.Name = BBV.name__c;
                     BranchBook.Branch__c = BranchMap.get('알라딘 직배송');
-                    BranchBook.Book__c = BBV.Book__c;
+                    BranchBook.BranchName__c = '알라딘 직배송';
+                    BranchBook.Book__c = BBV.book__c;
 
                     String link = (String) aladinUsed.get('link');
                     BranchBook.BookLink__c = link.replace('amp;','');
@@ -66,10 +67,10 @@ public with sharing class IF_GetDropshippingUsedBook {
                 Integer spaceMinPrice = (Integer)spaceUsed.get('minPrice');
 
                 if(IsThereSpaceUsed != 0 && IsThereSpaceUsed != null){
-                    ParamMap.put('BookName', BBV.Name);
-                    ParamMap.put('ISBN13', BBV.ISBN13__c);
+                    ParamMap.put('BookName', BBV.name__c);
+                    ParamMap.put('ISBN13', BBV.isbn13__c);
                     ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
-                    ParamMap.put('MasterBook', BBV.Book__c);
+                    ParamMap.put('MasterBook', BBV.book__c);
                     List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfo(BranchMap, ParamMap);
 
                     for(BranchBook__c SBB : spaceBranchBook){
