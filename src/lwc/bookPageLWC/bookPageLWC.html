@@ -4,9 +4,12 @@
 
 <!-- Book Page Lwc -->
 <template>
-    <lightning-datatable
+    <c-salesforce-codex-data-table
             key-field="Id"
             data={books.data}
+            show-row-number-column
+            suppress-bottom-bar
             columns={bookColumns}>
-    </lightning-datatable>
+            onrowaction={handleRowAction}>
+    </c-salesforce-codex-data-table>
 </template>

@@ -9,11 +9,10 @@
     <aura:attribute name="bookColumns" type="List"/>
 
     <body>
-    <lightning:datatable
-            data="{!v.listBook}"
-            columns="{!v.bookColumns}"
-            keyField="id"
-    />
+        <lightning:datatable
+                data="{!v.listBook}"
+                columns="{!v.bookColumns}"
+                keyField="id"/>
     </body>
 	
 </aura:component>

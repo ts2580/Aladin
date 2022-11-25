@@ -13,7 +13,7 @@ public with sharing class IF_Util {
         paramMap.put('Query', EncodingUtil.urlEncode(searchWord, 'UTF-8'));
         paramMap.put('Sort', 'PublishTime');
         paramMap.put('QueryType', 'Title');
-        paramMap.put('MaxResults', '50');
+        paramMap.put('MaxResults', '10');
         paramMap.put('start', '1');
         paramMap.put('Cover', 'Big');
         paramMap.put('SearchTarget', 'Book');
