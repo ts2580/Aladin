@@ -16,9 +16,9 @@ public with sharing class AladinBatch_1_sc implements Schedulable, Database.Allo
         delete BranchBook;
 
         Integer startNum = 1;
-        Integer endNum = 50;
+        Integer endNum = 60;
 
-        for(Integer i = 2; i < 30; i++){
+        for(Integer i = 2; i < 50; i++){
             IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
             startNum = endNum;
             endNum = 50*i;

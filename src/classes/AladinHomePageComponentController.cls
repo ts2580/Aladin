@@ -12,7 +12,7 @@ public with sharing class AladinHomePageComponentController {
         List<AggregateResult> AggregateBranchName = [SELECT BranchName__c, Branch__c, SUM(f_MinPrice__c) TotalPrice
                                                 FROM BranchBook__c
                                                 GROUP BY BranchName__c, Branch__c
-                                                ORDER BY BranchName__c ASC];
+                                                ORDER BY SUM(f_MinPrice__c) DESC];
 
         for(AggregateResult ABN : AggregateBranchName){
 
@@ -30,24 +30,38 @@ public with sharing class AladinHomePageComponentController {
 
         List<bookByVolume__x> listBookByVolume = [SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c
                                                   FROM bookByVolume__x
-                                                  WHERE Book__c =: recordId];
+                                                  WHERE Book__c =: recordId
+                                                  ORDER BY Volume__c];
 
         return listBookByVolume;
     }
 
     @AuraEnabled
-    public static void refreshBook(){
+    public static void refreshBook_1(){
         List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
 
         delete BranchBook;
 
         Integer startNum = 1;
-        Integer endNum = 50;
+        Integer endNum = 30;
 
-        for(Integer i = 2; i < 30; i++){
+        for(Integer i = 2; i < 50; i++){
             IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
             startNum = endNum;
-            endNum = 50*i;
+            endNum = 30*i;
+        }
+    }
+
+    @AuraEnabled
+    public static void refreshBook_2(){
+
+        Integer startNum = 1440;
+        Integer endNum = 1470;
+
+        for(Integer i = 50; i < 100; i++){
+            IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
+            startNum = endNum;
+            endNum = 30*i;
         }
     }
 

@@ -1,21 +1,22 @@
 /**
- * Created by SUNGJIN on 2022-10-02.
+ * Created by 한성진 on 2022-12-09.
  */
 
-public with sharing class IF_GetDropshippingUsedBook {
+public with sharing class IF_GetDropshippingUsedBookQuable implements Queueable{
 
-    @Future(Callout = true)
-    public static void getBookListInfo(Integer StartNum, Integer ENDNum){
+    // 근데 애초에 external에 있는 데이터 5천개 이상 한꺼번에 못가져와서 못씀.
+    // 연습했다고 생각하지뭐...
+
+    private final List<bookByVolume__x> listBooks;
+
+    public IF_GetDropshippingUsedBookQuable(List<bookByVolume__x> listBooks){
+        this.listBooks = listBooks;
+    }
+
+    public void execute(QueueableContext context) {
 
         IF_Util IF_Util = new IF_Util();
 
-        List<bookByVolume__x> ListBooks = [
-                SELECT ISBN13__c, Name__c, Book__c
-                FROM bookByVolume__x
-                WHERE IsPurchased__c = FALSE 
-                AND NoNeedToBuy__c = FALSE
-                AND Seq__c >=: StartNum
-                AND Seq__c <: ENDNum];
         List<BranchBook__c> ListBranchBook = new List<BranchBook__c>();
         List<Object> Books = new List<Object>();
 
@@ -24,7 +25,7 @@ public with sharing class IF_GetDropshippingUsedBook {
         Map<String, Object> spaceUsed = new Map<String, Object>();
         Map<String, String> ParamMap = new Map<String, String>();
 
-        for(bookByVolume__x BBV : ListBooks){
+        for(bookByVolume__x BBV : listBooks){
 
             Http http = new Http();
             HttpRequest request = new HttpRequest();
@@ -85,5 +86,4 @@ public with sharing class IF_GetDropshippingUsedBook {
 
         insert ListBranchBook;
     }
-
 }

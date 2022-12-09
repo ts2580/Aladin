@@ -2,17 +2,16 @@
  * Created by SUNGJIN on 2022-10-01.
  */
 
-public with sharing class IF_GetBookInfo {
+public with sharing class IF_GetBookInfoSingle {
 
-    public static void getBookInfo(Integer StartNum, Integer ENDNum){
+    public static void getBookInfo(Integer Order){
         
         IF_Util IF_Util = new IF_Util();
         Map<String, Object> BookMap = new Map<String, Object>();
         List<Book__c> ListBooks = [
                 SELECT Id, Name, Type__c, Cover__c
                 FROM Book__c
-                WHERE f_Order__c >=: StartNum
-                AND f_Order__c <: ENDNum];
+                WHERE f_Order__c =: Order];
         List<bookbyvolume__x> ListBookByVolume = new List<bookbyvolume__x>();
 
         for(Book__c LB : ListBooks){

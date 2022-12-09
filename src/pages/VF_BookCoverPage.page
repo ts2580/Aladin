@@ -1,3 +1,5 @@
-<apex:page standardController="BookByVolume__c">
-    <apex:image value="{!BookByVolume__c.Cover__c}"/>
+<apex:page standardController="Book__c">
+    <div style="text-align:center;">
+        <apex:image value="{!Book__c.Cover__c}"/>
+    </div>
 </apex:page>

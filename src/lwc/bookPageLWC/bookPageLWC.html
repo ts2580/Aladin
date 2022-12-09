@@ -4,12 +4,32 @@
 
 <!-- Book Page Lwc -->
 <template>
-    <c-salesforce-codex-data-table
-            key-field="Id"
-            data={books.data}
-            show-row-number-column
-            suppress-bottom-bar
-            columns={bookColumns}>
-            onrowaction={handleRowAction}>
-    </c-salesforce-codex-data-table>
+    <div class="slds-theme_shade slds-border_top slds-border_right slds-border_left slds-border_bottom">
+
+        <div class="slds-m-around_medium">
+            <lightning-card icon-name="standard:knowledge" title="권별">
+            </lightning-card>
+            <p class="slds-truncate">
+                Sorted by 권(숫자)
+            </p>
+        </div>
+
+        <div class="slds-border_top">
+            <c-salesforce-codex-data-table
+                    key-field="Id"
+                    data={books.data}
+                    show-row-number-column
+                    columns={bookColumns}
+                    onsave={handleSave}
+                    draft-values={draftValues}>
+            </c-salesforce-codex-data-table>
+        </div>
+
+    </div>
+
+
+
+
+
+
 </template>

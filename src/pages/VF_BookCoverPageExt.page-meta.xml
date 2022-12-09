@@ -3,5 +3,5 @@
     <apiVersion>56.0</apiVersion>
     <availableInTouch>true</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>VF_BookCoverPage</label>
+    <label>VF_BookCoverPageExt</label>
 </ApexPage>

@@ -17,8 +17,9 @@
             </div>
             <div class="slds-float_right">
                 <lightning:buttonGroup>
-                    <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBook2}"/>
-                    <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrice2}"/>
+                    <lightning:button label="지점별 재고 새로고침 1" onclick="{!c.refreshBooks_1}"/>
+                    <lightning:button label="지점별 재고 새로고침 2" onclick="{!c.refreshBooks_2}"/>
+                    <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
                 </lightning:buttonGroup>
             </div>
         </div>
