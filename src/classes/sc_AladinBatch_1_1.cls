@@ -1,13 +1,8 @@
-/**
- * Created by SUNGJIN on 2022-10-01.
- */
-
-public with sharing class AladinBatch_1_sc implements Schedulable, Database.AllowsCallouts{
-
-
+public with sharing class sc_AladinBatch_1_1 implements Schedulable, Database.AllowsCallouts{
+    
     /*
-    String CRON_EXP = '00 00 22 * * ? *';
-    System.schedule('AladinBatch', CRON_EXP, new AladinBatch_1_sc());
+    String CRON_EXP = '00 30 06 * * ? *';
+    System.schedule('1. 지점별 재고 가져오기 배치 1_1.', CRON_EXP, new sc_AladinBatch_1_1());
     */
     public void execute(SchedulableContext sc) {
 
@@ -16,14 +11,13 @@ public with sharing class AladinBatch_1_sc implements Schedulable, Database.Allo
         delete BranchBook;
 
         Integer startNum = 1;
-        Integer endNum = 60;
+        Integer endNum = 30;
 
         for(Integer i = 2; i < 50; i++){
             IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
             startNum = endNum;
-            endNum = 50*i;
+            endNum = 30*i;
         }
 
     }
-
 }

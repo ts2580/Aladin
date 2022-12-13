@@ -1,13 +1,8 @@
-/**
- * Created by SUNGJIN on 2022-10-01.
- */
-
-public with sharing class AladinBatch_2_sc implements Schedulable, Database.AllowsCallouts{
-
+public with sharing class sc_AladinBatch_3 implements Schedulable, Database.AllowsCallouts{
 
     /*
-    String CRON_EXP = '00 05 22 * * ? *';
-    System.schedule('2. Insert total price.', CRON_EXP, new AladinBatch_2_sc());
+    String CRON_EXP = '00 40 06 * * ? *';
+    System.schedule('3. 지점별 재고 총액 새로고침.', CRON_EXP, new sc_AladinBatch_3());
     */
     public void execute(SchedulableContext sc) {
 
@@ -39,5 +34,4 @@ public with sharing class AladinBatch_2_sc implements Schedulable, Database.Allo
         update ListBranch;
 
     }
-
 }

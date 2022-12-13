@@ -7,6 +7,8 @@ public with sharing class IF_GetBookInfoSingle {
     public static void getBookInfo(Integer Order){
         
         IF_Util IF_Util = new IF_Util();
+        InterfaceLog__c IFL = new InterfaceLog__c();
+        String responseError;
         Map<String, Object> BookMap = new Map<String, Object>();
         List<Book__c> ListBooks = [
                 SELECT Id, Name, Type__c, Cover__c
@@ -32,20 +34,16 @@ public with sharing class IF_GetBookInfoSingle {
 
                 Map<String, Object> responseBooks = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
                 Books = (List<Object>) responseBooks.get('item');
-                
-                
-                System.debug(Books);
 
 
-                if(Books.isEmpty()){
-                    LB.HasNoResult__c = true;
-                }else{
+                if(!Books.isEmpty()){
+
                     TotalVolume = Books.size();
                     for(Object objectBook : Books){
 
                         BookMap = (Map<String, Object>) objectBook;
 
-                        bookbyvolume__x BookByVolume = new bookbyvolume__x();
+                        bookByVolume__x BookByVolume = new bookByVolume__x();
                         String BookName = (String)BookMap.get('title');
                         if(BookName.length() > 70){
                             BookName = BookName.substring(0, 50);
@@ -69,9 +67,18 @@ public with sharing class IF_GetBookInfoSingle {
 
                         ListBookByVolume.add(BookByVolume);
                     }
-
-                    LB.Cover__c = ListBookByVolume[ListBookByVolume.size() - 1].cover__c;
+                    
+                    if (LB.Cover__c == Null) {
+                        LB.Cover__c = ListBookByVolume[ListBookByVolume.size() - 1].cover__c;
+                    }
                     LB.TotalVolume__c = String.valueOf(TotalVolume);
+                }else{
+                    System.debug('예외 발생!');
+                    IFL.StartNum__c = Order;
+                    IFL.ENDNum__c = Order;
+                    IFL.Name = ' Book의 Order가 ' + Order + '인 중고책 정보 받아오기 에러 발생';
+
+                    insert IFL;
                 }
             }
         }
