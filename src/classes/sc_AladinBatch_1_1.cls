@@ -1,7 +1,7 @@
 public with sharing class sc_AladinBatch_1_1 implements Schedulable, Database.AllowsCallouts{
     
     /*
-    String CRON_EXP = '00 30 06 * * ? *';
+    String CRON_EXP = '00 30 11 * * ? *';
     System.schedule('1. 지점별 재고 가져오기 배치 1_1.', CRON_EXP, new sc_AladinBatch_1_1());
     */
     public void execute(SchedulableContext sc) {

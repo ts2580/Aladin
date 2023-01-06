@@ -2,7 +2,7 @@
  * Created by 한성진 on 2022-12-09.
  */
 
-public with sharing class IF_GetDropshippingUsedBookQuable implements Queueable{
+public with sharing class IF_GetDropshippingUsedBookQuable implements Queueable, Database.AllowsCallouts{
 
     // 근데 애초에 external에 있는 데이터 5천개 이상 한꺼번에 못가져와서 못씀.
     // 연습했다고 생각하지뭐...

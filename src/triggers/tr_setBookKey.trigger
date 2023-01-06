@@ -14,7 +14,6 @@ trigger tr_setBookKey on Book__c (before insert) {
             book.S_OriginalKey__c = 'B0' + String.valueOf(keyNum + 1);
         }
 
-
         keyNum += 1;
     }
     

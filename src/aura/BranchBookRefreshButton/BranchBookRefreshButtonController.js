@@ -7,6 +7,10 @@
 		helper.setBranchBook_2(component, event, helper);
 	},
 
+	rerun : function(component, event, helper) {
+        helper.rerunFailedIF(component, event, helper);
+    },
+
 	refreshPrices : function(component, event, helper) {
         helper.setTotalBranchBookPrice(component, event, helper);
     },

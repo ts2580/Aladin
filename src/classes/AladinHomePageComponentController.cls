@@ -66,6 +66,26 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
+    public static void rerunFailedIF(){
+
+        List<InterfaceLog__c> InterfaceLog= [SELECT Id, StartNum__c, ENDNum__c
+        FROM InterfaceLog__c
+        WHERE IsRerun__c = FALSE];
+
+        Decimal startNum = 0;
+        Decimal endNum = 0;
+
+        for(InterfaceLog__c IFG : InterfaceLog){
+            startNum = IFG.StartNum__c;
+            endNum = IFG.ENDNum__c;
+            IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
+            IFG.IsRerun__c = true;
+        }
+
+        update InterfaceLog;
+    }
+
+    @AuraEnabled
     public static void refreshPrice(){
 
         String StringPrice = null;

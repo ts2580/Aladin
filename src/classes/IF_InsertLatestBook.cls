@@ -50,6 +50,7 @@ public with sharing class IF_InsertLatestBook {
                     String NormalCover = (String) BookMap.get('cover');
 
                     BBV.cover__c = NormalCover.replace('cover','cover500');
+                    BBV.Volume__c = 0;
                 }
             }
         }

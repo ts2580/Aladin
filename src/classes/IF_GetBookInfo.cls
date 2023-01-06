@@ -61,18 +61,13 @@ public with sharing class IF_GetBookInfo {
                         BookByVolume.cover__c = NormalCover.replace('cover','cover500');
                         BookByVolume.book__c = LB.Id;
                         BookByVolume.type__c = LB.Type__c;
-
-
-                        if(LB.Type__c == '만화' || LB.Type__c == '라노벨'){
-                            BookByVolume.volume__c = Integer.valueOf(TotalVolume);
-                            TotalVolume--;
-                        }
+                        BookByVolume.volume__c = Integer.valueOf(TotalVolume);
+                        TotalVolume--;                            
 
                         ListBookByVolume.add(BookByVolume);
                     }
 
                     LB.Cover__c = ListBookByVolume[ListBookByVolume.size() - 1].cover__c;
-                    LB.TotalVolume__c = String.valueOf(TotalVolume);
                 }
             }
         }

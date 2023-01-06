@@ -8,23 +8,23 @@ public with sharing class IF_GetDropshippingUsedBook {
     public static void getBookListInfo(Integer StartNum, Integer ENDNum){
 
         IF_Util IF_Util = new IF_Util();
-        InterfaceLog__c IFL = new InterfaceLog__c();
+        List<InterfaceLog__c> listIFL = new List<InterfaceLog__c>();
         List<bookByVolume__x> ListBooks = new List<bookByVolume__x>();
 
         try {
             ListBooks = [
-                SELECT ISBN13__c, Name__c, Book__c
+                SELECT ISBN13__c, Name__c, Book__c, Volume__c, Seq__c
                 FROM bookByVolume__x
                 WHERE IsPurchased__c = FALSE
                 AND NoNeedToBuy__c = FALSE
                 AND Seq__c >=: StartNum
-                AND Seq__c <: ENDNum];
+                AND Seq__c <: ENDNum
+            ];
         }catch (Exception e){
-            System.debug('DB 접속 예외 발생!');
-
+            InterfaceLog__c IFL = new InterfaceLog__c();
             IFL.StartNum__c = StartNum;
             IFL.ENDNum__c = ENDNum;
-            IFL.Name = ' Seq ' + StartNum + ' ~ ' + ENDNum +'사이 중고책 정보 받아오기 에러 발생';
+            IFL.Name = ' Seq ' + StartNum + ' ~ ' + ENDNum +'사이 중고책 정보 헤로쿠에서 받아오기 에러 발생';
             IFL.Log__c = e.getMessage();
 
             insert IFL;
@@ -63,12 +63,14 @@ public with sharing class IF_GetDropshippingUsedBook {
                     Integer minPrice = (Integer)aladinUsed.get('minPrice');
 
                     if(IsDropShipping != 0 && IsDropShipping != null){
+                        BBV.Volume__c = (BBV.Volume__c == null) ? 1 : BBV.Volume__c;
 
                         BranchBook__c BranchBook = new BranchBook__c();
                         BranchBook.Name = BBV.Name__c;
                         BranchBook.Branch__c = BranchMap.get('알라딘 직배송');
                         BranchBook.BranchName__c = '알라딘 직배송';
                         BranchBook.Book__c = BBV.Book__c;
+                        BranchBook.Volume__c = BBV.Volume__c;
 
                         String link = (String) aladinUsed.get('link');
                         BranchBook.BookLink__c = link.replace('amp;','');
@@ -87,17 +89,33 @@ public with sharing class IF_GetDropshippingUsedBook {
                         ParamMap.put('ISBN13', BBV.ISBN13__c);
                         ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
                         ParamMap.put('MasterBook', BBV.Book__c);
-                        List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfo(BranchMap, ParamMap);
+                        ParamMap.put('Volume', String.valueOf(BBV.Volume__c));
 
-                        for(BranchBook__c SBB : spaceBranchBook){
-                            ListBranchBook.add(SBB);
+                        try{
+                            List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfo(BranchMap, ParamMap);
+
+                            for(BranchBook__c SBB : spaceBranchBook){
+                                ListBranchBook.add(SBB);
+                            }
+                        }catch(Exception e){
+                            InterfaceLog__c IFL = new InterfaceLog__c();
+                            IFL.StartNum__c = BBV.Seq__c;
+                            IFL.ENDNum__c = BBV.Seq__c + 1;
+                            IFL.Name = '"' + BBV.Name__c + '"' + '재고 정보 가져오기 실패';
+                            IFL.Log__c = e.getMessage();
+                            listIFL.add(IFL);
                         }
                     }
                 }
             }
             insert ListBranchBook;
+            insert listIFL;
         }else{
-            
+            InterfaceLog__c IFL = new InterfaceLog__c();
+            IFL.StartNum__c = StartNum;
+            IFL.ENDNum__c = ENDNum;
+            IFL.Name = ' Seq ' + StartNum + ' ~ ' + ENDNum +'사이 중고책 정보 알라딘에서 받아오기 에러 발생';
+            insert listIFL;
         }
     }
 

@@ -19,6 +19,7 @@
                 <lightning:buttonGroup>
                     <lightning:button label="지점별 재고 새로고침 1" onclick="{!c.refreshBooks_1}"/>
                     <lightning:button label="지점별 재고 새로고침 2" onclick="{!c.refreshBooks_2}"/>
+                    <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
                     <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
                 </lightning:buttonGroup>
             </div>

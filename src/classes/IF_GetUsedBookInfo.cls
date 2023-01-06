@@ -30,6 +30,7 @@ public with sharing class IF_GetUsedBookInfo {
                 BranchBook.Branch__c = BranchMap.get((String) BranchDetail.get('offName'));
                 BranchBook.BranchName__c = (String) BranchDetail.get('offName');
                 BranchBook.Book__c = ParamMap.get('MasterBook');
+                BranchBook.Volume__c = Integer.valueOf(ParamMap.get('Volume'));
 
                 String link = (String) BranchDetail.get('link');
                 BranchBook.BookLink__c = link.replace('amp;','');

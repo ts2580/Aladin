@@ -6,15 +6,9 @@ import {LightningElement, wire, api} from 'lwc';
 import getBook from '@salesforce/apex/AladinHomePageComponentController.getBook';
 // Apex method와 Wire
 
-
 import {refreshApex} from '@salesforce/apex';
 import {updateRecord} from 'lightning/uiRecordApi';
-
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
-
-
-
-
 
 const bookColumns =  [
     {label: '제목', fieldName: 'Name__c', type: 'text', editable: true},

@@ -1,7 +1,7 @@
 public with sharing class sc_AladinBatch_2 implements Schedulable, Database.AllowsCallouts{
 
     /*
-    String CRON_EXP = '00 45 06 * * ? *';
+    String CRON_EXP = '00 45 11 * * ? *';
     System.schedule('2. 실패한 인터페이스 재실행 배치', CRON_EXP, new sc_AladinBatch_2());
     */
     public void execute(SchedulableContext sc) {
@@ -17,10 +17,10 @@ public with sharing class sc_AladinBatch_2 implements Schedulable, Database.Allo
             startNum = IFG.StartNum__c;
             endNum = IFG.ENDNum__c;
             IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
-            IFG.IsRerun__c = TRUE;
+            IFG.IsRerun__c = true;
         }
 
-        UPDATE InterfaceLog;
+        update InterfaceLog;
 
     }
 
