@@ -5,13 +5,26 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.fnInit}" />
     <!--<aura:attribute name="recordId" type="String"/>-->
-    <aura:attribute name="BranchBook" type="BranchBook__c"/>
-    <aura:attribute name="MapBooksByBranch" type="Map[]"/>
-    <aura:attribute name="ObjectBook" type="Object"/>
+    <aura:attribute name="listBranch" type="Branch__c[]"/>
 
     <body>
-        <div class="Branch">
-
+        <div class="slds-grid slds-wrap">
+            <aura:iteration items="{!v.listBranch}" var="branch">
+                <div class="slds-box_border slds-size_1-of-8">
+                    <lightning:card 
+                            class="slds-m-around_small"
+                            variant="Narrow" 
+                            title="{!branch.Name}"
+                            iconName="custom:custom98">
+                        {!branch.TotalPrice__c}
+                        <lightning:button
+                            name="{!branch.Id}" 
+                            class="slds-m-left_x-large btn_branch" 
+                            label="새창에서 열기" 
+                            onclick="{!c.goBranch}"/>
+                    </lightning:card>
+                </div>
+            </aura:iteration>
         </div>
     </body>
 	

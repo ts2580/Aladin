@@ -4,26 +4,12 @@
 
 public with sharing class AladinHomePageComponentController {
 
-    @AuraEnabled
-    public static Map<String, List<String>> getBranch(){
+    @AuraEnabled(Cacheable=true)
+    public static List<Branch__c> getBranch(){
 
-        Map<String, List<String>> MapBranch = new Map<String, List<String>>();
+        List<Branch__c> listBranch = [SELECT Id, Name, TotalPrice__c FROM Branch__c ORDER BY TotalPriceInt__c DESC];
 
-        List<AggregateResult> AggregateBranchName = [SELECT BranchName__c, Branch__c, SUM(f_MinPrice__c) TotalPrice
-                                                FROM BranchBook__c
-                                                GROUP BY BranchName__c, Branch__c
-                                                ORDER BY SUM(f_MinPrice__c) DESC];
-
-        for(AggregateResult ABN : AggregateBranchName){
-
-            List<String> BranchIdAndTotalPrice = new List<String>();
-            BranchIdAndTotalPrice.add(Url.getSalesforceBaseUrl().toExternalForm());
-            BranchIdAndTotalPrice.add(String.valueOf(ABN.get('TotalPrice')));
-            BranchIdAndTotalPrice.add(String.valueOf(ABN.get('Branch__c')));
-            MapBranch.put(String.valueOf(ABN.get('BranchName__c')), BranchIdAndTotalPrice);
-        }
-
-        return MapBranch;
+        return listBranch;
     }
     @AuraEnabled(Cacheable=true)
     public static List<bookByVolume__x> getBook(Id recordId){
@@ -37,15 +23,25 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
-    public static void refreshBook_1(){
+    public static void deleteBook(){
+        
         List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
-
         delete BranchBook;
 
-        Integer startNum = 1;
-        Integer endNum = 30;
+    }
 
-        for(Integer i = 2; i < 50; i++){
+    @AuraEnabled
+    public static void refreshBook_1(Integer startNum, Integer endNum){
+        IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
+    }
+
+    @AuraEnabled
+    public static void refreshBook_2(){
+
+        Integer startNum = 1470;
+        Integer endNum = 1500;
+
+        for(Integer i = 51; i < 100; i++){
             IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
             startNum = endNum;
             endNum = 30*i;
@@ -53,12 +49,12 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
-    public static void refreshBook_2(){
+    public static void refreshBook_3(){
 
-        Integer startNum = 1440;
-        Integer endNum = 1470;
+        Integer startNum = 2970;
+        Integer endNum = 3000;
 
-        for(Integer i = 50; i < 100; i++){
+        for(Integer i = 101; i < 150; i++){
             IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
             startNum = endNum;
             endNum = 30*i;
@@ -103,14 +99,15 @@ public with sharing class AladinHomePageComponentController {
             MapBranch.put(String.valueOf(ABN.get('Branch__c')), String.valueOf(ABN.get('TotalPrice')));
         }
 
-        List<Branch__c> ListBranch = [SELECT Id, Name, TotalPrice__c FROM Branch__c];
+        List<Branch__c> ListBranch = [SELECT Id, Name, TotalPrice__c, TotalPriceInt__c FROM Branch__c];
 
         for(Branch__c B : ListBranch){
 
             StringPrice = MapBranch.get(B.Id);
-            FormattingPrice = ( Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
+            FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
             FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';
             B.TotalPrice__c = FormattedPrice;
+            B.TotalPriceInt__c = Integer.valueOf(StringPrice);
         }
 
         update ListBranch;

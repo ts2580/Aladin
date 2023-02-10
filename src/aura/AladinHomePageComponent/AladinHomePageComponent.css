@@ -9,6 +9,12 @@
     margin: 1px;
 }
 
-.THIS .BookByBranch-td {
-
+.THIS .btn_branch {
+    background-color : transparent;
+    border : none;
+    border-radius : 0px;
+    color : #006DCC;
+    text-align : left;
+    padding : 0px;
+    box-shadow: none;
 }

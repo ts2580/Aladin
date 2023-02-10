@@ -4,7 +4,7 @@
 
 public with sharing class IF_GetDropshippingUsedBook {
 
-    @Future(Callout = true)
+    // @Future(Callout = true)
     public static void getBookListInfo(Integer StartNum, Integer ENDNum){
 
         IF_Util IF_Util = new IF_Util();
@@ -13,7 +13,7 @@ public with sharing class IF_GetDropshippingUsedBook {
 
         try {
             ListBooks = [
-                SELECT ISBN13__c, Name__c, Book__c, Volume__c, Seq__c
+                SELECT Isbn13__c, Name__c, Book__c, Volume__c, Seq__c
                 FROM bookByVolume__x
                 WHERE IsPurchased__c = FALSE
                 AND NoNeedToBuy__c = FALSE
@@ -43,7 +43,7 @@ public with sharing class IF_GetDropshippingUsedBook {
 
                 Http http = new Http();
                 HttpRequest request = new HttpRequest();
-                request.setEndpoint(IF_Util.getDropshippingUsedBookURL(BBV.ISBN13__c));
+                request.setEndpoint(IF_Util.getDropshippingUsedBookURL(BBV.Isbn13__c));
                 request.setMethod('GET');
                 HttpResponse response = http.send(request);
 
@@ -86,7 +86,7 @@ public with sharing class IF_GetDropshippingUsedBook {
 
                     if(IsThereSpaceUsed != 0 && IsThereSpaceUsed != null){
                         ParamMap.put('BookName', BBV.Name__c);
-                        ParamMap.put('ISBN13', BBV.ISBN13__c);
+                        ParamMap.put('ISBN13', BBV.Isbn13__c);
                         ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
                         ParamMap.put('MasterBook', BBV.Book__c);
                         ParamMap.put('Volume', String.valueOf(BBV.Volume__c));

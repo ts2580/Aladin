@@ -5,7 +5,7 @@
       <list>
         <IlluminatedCloudConnection>
           <option name="connectionName" value="Aladin" />
-          <option name="connectionType" value="MDAPI" />
+          <option name="connectionType" value="OAUTH" />
           <option name="defaultModuleName" value="Aladin" />
           <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/Aladin/OfflineSymbolTable.zip" />
         </IlluminatedCloudConnection>

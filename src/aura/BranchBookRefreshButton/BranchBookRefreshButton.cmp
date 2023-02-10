@@ -8,6 +8,8 @@
                 access="global">
 
     <lightning:notificationsLibrary aura:id="notifLib"/>
+    <aura:attribute name="startNum" type="Integer" default="1"/>
+    <aura:attribute name="endNum"   type="Integer" default="3"/>
 
     <body>
         <div class="slds-box_x-small slds-theme_shade slds-clearfix slds-border_top slds-border_right slds-border_left slds-border_bottom">
@@ -17,8 +19,8 @@
             </div>
             <div class="slds-float_right">
                 <lightning:buttonGroup>
-                    <lightning:button label="지점별 재고 새로고침 1" onclick="{!c.refreshBooks_1}"/>
-                    <lightning:button label="지점별 재고 새로고침 2" onclick="{!c.refreshBooks_2}"/>
+                    <lightning:button label="기존 재고 삭제" onclick="{!c.delete}"/>
+                    <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBooks_1}"/>
                     <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
                     <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
                 </lightning:buttonGroup>
