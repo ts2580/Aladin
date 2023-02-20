@@ -1,36 +1,18 @@
 ({
-    deleteBooks : function(component, event, helper){
-        let action = component.get("c.deleteBook");
+    setBranchBook_1 : function(component, event, helper){
+
+        let action = component.get("c.refreshBook_1");
 
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
                 component.find('notifLib').showToast({
                     "variant": "success",
-                    "header": "재고 삭재",
-                    "message": "지점별 재고를 삭제하였습니다.",
+                    "header": "재고 갱신",
+                    "message": "지점별 재고 정보 1을 갱신중입니다.",
                     "mode": "dismissible"
                 });
             }
-        });
-
-        $A.enqueueAction(action);
-    },
-
-    setBranchBook_1 : function(component, event, helper){
-
-        let startNum = component.get('v.startNum');
-        let endNum = component.get('v.endNum');
-
-        let action = component.get("c.refreshBook_1");
-        action.setParams({
-            "startNum": startNum,
-            "endNum": endNum
-        });
-
-        action.setCallback(this, function(response){
-            let state = response.getState();
-            console.dir(startNum + ' ~ ' + endNum);
         });
 
         $A.enqueueAction(action);
