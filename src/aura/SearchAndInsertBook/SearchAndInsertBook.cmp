@@ -1,0 +1,163 @@
+<!--
+ - Created by 한성진 on 2023-02-16.
+ -->
+
+<aura:component description="SearchAndInsertBook"
+                controller="SearchAndInsertBookController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+>
+    <!-- 노티피케이션 -->
+    <lightning:notificationsLibrary                     aura:id="notificationLib"/>
+    <aura:attribute     name="toastMap"                 type="Map"/>
+
+    <!--책(Internal) 검색-->
+    <aura:attribute     name="listBook"                 type="Book__c[]"                    default="[]"/>
+
+    <!--책(External) 검색-->
+    <aura:attribute     name="listBookExt"              type="BookByVolume__x[]"            default="[]"/>
+
+    <!--책 삽입 모달-->
+    <aura:attribute     name="isBookInsertModalOpen"    type="boolean"                      default="false"/>
+    <aura:method        name="fnCloseBookModal"         action="{!c.fnCloseBookModal}"      access="global"></aura:method>
+    <aura:method        name="fnSetAndCloseModal"       action="{!c.fnSetAndCloseModal}"    access="global">
+        <aura:attribute name="paramBook"                type="Book__c"                      default="{}"/>
+    </aura:method>
+    <aura:method        name="fnSetAndCloseModalExt"    action="{!c.fnSetAndCloseModalExt}" access="global">
+        <aura:attribute name="paramBookExt"             type="BookByVolume__x"              default="{}"/>
+    </aura:method>
+
+    <div class="slds-grid gridDiv">
+        <!-- 왼쪽 영역 -->
+        <div class="slds-col slds-size_6-of-12 body slds-border_right">
+            <div class="slds-grid slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:input label="도서 검색"
+                                     class="slds-m-left_small"
+                                     placeholder="도서명을 입력해주세요"
+                                     variant="standard"
+                                     oncommit="{!c.fnSearchBook}"
+                    />
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:button label="새 책 삽입"
+                                      variant="neutral"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                                      onclick="{!c.fnOpenBookInsertModal}"
+                    >
+                    </lightning:button>
+                    <!-- 책 삽입 모달 -->
+                    <aura:if isTrue="{!v.isBookInsertModalOpen}">
+                        <c:InsertBookModal aura:id="setMode" parent="{!this}"/>
+                    </aura:if>
+                </div>
+            </div>
+            <aura:iteration var="objBook" items="{!v.listBook}" indexVar="idx">
+                <lightning:recordEditForm objectApiName="Book__c"
+                                          class="slds-m-around_small slds-box_border"
+                                          onsuccess="{!c.fnHandleSuccess}"
+                                          onerror="{!c.fnHandleError}"
+                                          recordId="{!objBook.Id}"
+                >
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_4-of-12">
+                            <img src="{!objBook.Cover__c}" class="img slds-float_right slds-m-top_xx-small"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12">
+
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning:input value="{!objBook.Id}" label="Id" variant="label-inline" disabled="true"/>
+                            <lightning:inputField fieldName="Name"/>
+                            <lightning:inputField fieldName="Type__c"/>
+                            <lightning:inputField fieldName="Cover__c"/>
+                            <lightning:input value="{!objBook.Order__c}" label="순번" variant="label-inline" disabled="true"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-m-top_xx-large">
+                            <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtn"
+                                              label="&ensp;IF&ensp;"
+                                              variant="success"
+                                              value="{!objBook.Name}"
+                                              onclick="{!c.fnDoIf}"
+                            />
+                            <lightning:button class="submitBtn"
+                                              type="submit"
+                                              label="save"
+                                              variant="brand"
+                            />
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </aura:iteration>
+        </div>
+
+        <!-- 오른쪽 영역 -->
+        <div class="slds-col slds-size_6-of-12 body">
+            <div class="slds-grid slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:input label="권 별 도서 검색"
+                                     class="slds-m-left_small"
+                                     placeholder="도서명이나 id를 입력해주세요"
+                                     variant="standard"
+                                     oncommit="{!c.fnSearchBookExt}"
+                    />
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:button label="권 별로 책 삽입"
+                                      variant="neutral"
+                                      onclick="{!c.fnOpenBookExtInsertModal}"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                    />
+                </div>
+            </div>
+            <aura:iteration var="objBook" items="{!v.listBookExt}" indexVar="idx">
+                <lightning:recordEditForm objectApiName="BookByVolume__x"
+                                          class="slds-m-around_small slds-box_border"
+                                          onsuccess="{!c.fnHandleSuccess}"
+                                          onerror="{!c.fnHandleError}"
+                                          recordId="{!objBook.Id}"
+                >
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_4-of-12">
+                            <img src="{!objBook.Cover__c}" class="img slds-float_right slds-m-top_xx-small" style="margin-bottom: 7px;"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12">
+
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
+                            <lightning:inputField value="{!objBook.Price__c}"       fieldName="Price__c"/>
+                            <lightning:inputField value="{!objBook.IsPurchased__c}" fieldName="IsPurchased__c" />
+                            <lightning:inputField value="{!objBook.Cover__c}"       fieldName="Cover__c"/>
+                            <lightning:inputField value="{!objBook.Book__c}"        fieldName="Book__c"/>
+                            <lightning:inputField value="{!objBook.Seq__c}"         fieldName="Seq__c"/>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
+                            <lightning:inputField value="{!objBook.Type__c}"        fieldName="Type__c"/>
+                            <lightning:inputField value="{!objBook.Name__c}"        fieldName="Name__c"/>
+                            <lightning:inputField value="{!objBook.Volume__c}"      fieldName="Volume__c"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-m-top_xx-large">
+                            <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                              label="&ensp;&ensp;IF&ensp;&ensp;"
+                                              variant="success"
+                                              value="{!objBook.Name__c}"
+                                              onclick="{!c.fnDoIfExt}"
+                            />
+                            <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                              label="Delete"
+                                              variant="destructive"
+                                              value="{!objBook.Id__c}"
+                                              onclick="{!c.fnDeleteBook}"
+                            />
+                            <lightning:button class="submitBtnExt"
+                                              type="submit"
+                                              label="&nbsp;&nbsp;save&nbsp;&nbsp;"
+                                              variant="brand"
+                            />
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </aura:iteration>
+        </div>
+    </div>
+
+</aura:component>

@@ -1,0 +1,37 @@
+/**
+ * Created by 한성진 on 2023-02-16.
+ */
+
+.THIS .body{
+    background-color    : white;
+    height              : 85vh;
+}
+
+.THIS .img {
+    height              : 210px;
+}
+
+.THIS .saveBtn{
+    bottom              : 2px;
+}
+
+.THIS .submitBtn{
+    bottom              : -86px;
+}
+
+.THIS .submitBtnExt{
+    bottom              : -42px;
+}
+
+.THIS .childModalContainer{
+    min-width        : 50vw;
+}
+
+.THIS .childModalBody{
+    height       : 50vh;
+}
+
+.THIS .closeIcon {
+    --sds-c-icon-color-foreground-default: white;
+    cursor           : pointer;
+}

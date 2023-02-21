@@ -11,11 +11,12 @@ public with sharing class AladinHomePageComponentController {
 
         return listBranch;
     }
-    @AuraEnabled(Cacheable=true)
-    public static List<bookByVolume__x> getBook(Id recordId){
 
-        List<bookByVolume__x> listBookByVolume = [SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c
-                                                  FROM bookByVolume__x
+    @AuraEnabled(Cacheable=true)
+    public static List<BookByVolume__x> getBook(Id recordId){
+
+        List<BookByVolume__x> listBookByVolume = [SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c
+                                                  FROM BookByVolume__x
                                                   WHERE Book__c =: recordId
                                                   ORDER BY Volume__c];
 
@@ -23,16 +24,19 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
-    public static void deleteBook(){
-        
+    public static void refreshBook_1(){
+
         List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
         delete BranchBook;
 
-    }
+        Integer startNum = 1;
+        Integer endNum = 30;
 
-    @AuraEnabled
-    public static void refreshBook_1(Integer startNum, Integer endNum){
-        IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
+        for(Integer i = 2; i < 52; i++){
+            IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
+            startNum = endNum;
+            endNum = 30*i;
+        }
     }
 
     @AuraEnabled
@@ -64,9 +68,11 @@ public with sharing class AladinHomePageComponentController {
     @AuraEnabled
     public static void rerunFailedIF(){
 
-        List<InterfaceLog__c> InterfaceLog= [SELECT Id, StartNum__c, ENDNum__c
-        FROM InterfaceLog__c
-        WHERE IsRerun__c = FALSE];
+        List<InterfaceLog__c> InterfaceLog= [
+            SELECT Id, StartNum__c, ENDNum__c
+            FROM InterfaceLog__c
+            WHERE IsRerun__c = FALSE
+        ];
 
         Decimal startNum = 0;
         Decimal endNum = 0;
@@ -104,10 +110,15 @@ public with sharing class AladinHomePageComponentController {
         for(Branch__c B : ListBranch){
 
             StringPrice = MapBranch.get(B.Id);
-            FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
-            FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';
-            B.TotalPrice__c = FormattedPrice;
-            B.TotalPriceInt__c = Integer.valueOf(StringPrice);
+            try{
+                FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
+                FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';
+                B.TotalPrice__c = FormattedPrice;
+                B.TotalPriceInt__c = Integer.valueOf(StringPrice);
+            }catch(Exception e){
+                B.TotalPrice__c = '재고없음!';
+                B.TotalPriceInt__c = 0;
+            }
         }
 
         update ListBranch;

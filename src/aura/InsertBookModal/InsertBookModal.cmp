@@ -1,0 +1,123 @@
+<!--
+ - Created by 한성진 on 2023-02-17.
+ -->
+
+<aura:component description="InsertBookModal" access="global" controller="SearchAndInsertBookController">
+    
+    <!--Internal인지 External인지-->
+    <aura:method        name="setModalMode" action="{!c.fnInit}"    access="global">
+        <!-- 메쏘드 안의 attr은 파라미터로 받아오는것임. 이 컴포넌트의 attr과는 성격이 약간 다름 -->
+        <aura:attribute name="modalMode"    type="String"/>
+    </aura:method>
+    <aura:attribute     name="mode"         type="String"/>
+    
+
+    <!--토스트나 노티스용 라이브러리-->
+    <lightning:notificationsLibrary         aura:id="notificationLib"/>
+
+    <!--부모 아우라 컴포넌트-->
+    <aura:attribute name="parent"           type="Aura.Component"/>
+
+    <!--책 하나 세팅. 디폴트로 초기화 시켜주자.-->
+    <aura:attribute name="book"             type="Book__c"          default="{}"/>
+    <aura:attribute name="bookExt"          type="BookByVolume__x"  default="{}"/>
+
+    <!--save 클릭인지, save&new 버튼 클릭인지 구분자-->
+    <aura:attribute name="isInsertAndNew"   type="boolean"/>
+
+    <!-- Book__c에 넣을 경우 -->
+    <aura:if isTrue="{!v.mode == 'int'}">
+        <div class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container childModalContainer">
+    
+                <!-- Modal Close Icon -->
+                <div class="slds-text-align_right slds-m-bottom_small" onclick="{!c.fnCloseModal}">
+                    <lightning:icon class="closeIcon"
+                                    iconName="utility:close"
+                                    alternativeText="Back to page"
+                                    title="close"
+                    />
+                </div>
+                <!-- Modal Header -->
+                <header class="slds-modal__header slds-border_top">
+                    <h1 class="slds-modal__title slds-hyphenate">책 삽입</h1>
+                </header>
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-grid childModalBody">
+                    <div class="slds-align_absolute-center">
+                        <lightning:recordEditForm objectApiName="Book__c" density="compact">
+                            <div class="slds-grid slds-gutters" style="width:40vw">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:inputField aura:id="bookField" value="{!v.book.Name}" fieldName="Name"/>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-size_large">
+                                    <lightning:inputField aura:id="bookField" value="{!v.book.Type__c}" fieldName="Type__c"/>
+                                </div>
+                            </div>
+                        </lightning:recordEditForm>
+                    </div>
+                </div>
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button label="취소" onclick="{!c.fnCloseModal}" />
+                        <!-- Type="submit" 하면 최상위 모달의 recordEditForm을 제출함-->
+                        <!--나름 이벤트 버블링인가-->
+                        <lightning:button label="저장 및 새로 만들기" onclick="{!c.fnInsertBookAndNew}"/>
+                        <lightning:button label="저장" variant="brand" onclick="{!c.fnInsertBook}"/>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <!-- BookByVolume__x에 넣을 경우. else에 넣으면 왠지 이상하게 작동함 -->
+    <aura:if isTrue="{!v.mode == 'ext'}">
+        <div class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container childModalContainer">
+                <!-- Modal Close Icon -->
+                <div class="slds-text-align_right slds-m-bottom_small" onclick="{!c.fnCloseModal}">
+                    <lightning:icon class="closeIcon"
+                                    iconName="utility:close"
+                                    alternativeText="Back to page"
+                                    title="close"
+                    />
+                </div>
+                <!-- Modal Header -->
+                <header class="slds-modal__header slds-border_top">
+                    <h1 class="slds-modal__title slds-hyphenate">권 별 책 삽입</h1>
+                </header>
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-grid childModalBody">
+                    <div class="slds-align_absolute-center">
+                        <lightning:recordEditForm objectApiName="BookByVolume__x" density="compact">
+                            <div class="slds-grid slds-gutters" style="width:40vw">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Type__c}" fieldName="Type__c"/>
+                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Book__c}" fieldName="Book__c"/>
+                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Name__c}" fieldName="Name__c"/>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-size_large">
+                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Volume__c}" fieldName="Volume__c"/>
+                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.IsPurchased__c}" fieldName="IsPurchased__c"/>
+                                </div>
+                            </div>
+                        </lightning:recordEditForm>
+                    </div>
+                </div>
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button label="취소" onclick="{!c.fnCloseModal}" />
+                        <!-- Type="submit" 하면 최상위 모달의 recordEditForm을 제출함-->
+                        <!--나름 이벤트 버블링인가-->
+                        <lightning:button label="저장 및 새로 만들기" onclick="{!c.fnInsertBookExtAndNew}"/>
+                        <lightning:button label="저장" variant="brand" onclick="{!c.fnInsertBookExt}"/>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>
