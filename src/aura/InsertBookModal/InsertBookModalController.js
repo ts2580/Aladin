@@ -4,8 +4,14 @@
 
 ({
     fnInit: function(component, event, helper){
+
         let param = event.getParam('arguments');
+
+        console.dir('param : ' + param);
+
         let mode = param.modalMode;
+
+        console.dir('mode : ' + mode);
         
         component.set('v.mode', mode);
 
