@@ -1,6 +1,8 @@
 ({
     setBranchBook_1 : function(component, event, helper){
 
+        component.set('v.isSpinnerOpen', true);
+
         let action = component.get("c.refreshBook_1");
 
         action.setCallback(this, function(response){
@@ -9,13 +11,15 @@
                 component.find('notifLib').showToast({
                     "variant": "success",
                     "header": "재고 갱신",
-                    "message": "지점별 재고 정보 1을 갱신중입니다.",
+                    "message": "지점별 재고 정보를 갱신중입니다.",
                     "mode": "dismissible"
                 });
             }
+            component.set('v.isSpinnerOpen', false);
         });
 
         $A.enqueueAction(action);
+
     },
 
     setBranchBook_2 : function(component, event, helper){
@@ -58,6 +62,8 @@
 
     rerunFailedIF : function(component, event, helper){
 
+        component.set('v.isSpinnerOpen', true);
+
         let action = component.get("c.rerunFailedIF");
 
         action.setCallback(this, function(response){
@@ -70,13 +76,18 @@
                     "mode": "dismissible"
                 });
             }
+            component.set('v.isSpinnerOpen', false);
         });
 
         $A.enqueueAction(action);
     },
 
     setTotalBranchBookPrice : function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
+
         let action = component.get("c.refreshPrice");
+
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
@@ -87,6 +98,7 @@
                     "mode": "dismissible"
                 });
             }
+            component.set('v.isSpinnerOpen', false);
         });
         $A.enqueueAction(action);
     }

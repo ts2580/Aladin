@@ -4,17 +4,10 @@
 
 ({
     fnInit: function(component, event, helper){
-
         let param = event.getParam('arguments');
-
-        console.dir('param : ' + param);
-
         let mode = param.modalMode;
 
-        console.dir('mode : ' + mode);
-        
         component.set('v.mode', mode);
-
     },
 
     fnCloseModal: function(component, event, helper){
@@ -41,8 +34,5 @@
         component.set('v.isInsertAndNew', true);
         helper.insertBookExt(component, event, helper);
     },
-
-    
-
 
 });

@@ -6,16 +6,15 @@
     
     <!--Internal인지 External인지-->
     <aura:method        name="setModalMode" action="{!c.fnInit}"    access="global">
-        <!-- 메쏘드 안의 attr은 파라미터로 받아오는것임. 이 컴포넌트의 attr과는 성격이 약간 다름 -->
+        <!-- 메쏘드 안의 attr은 파라미터로 받아오는것임. 메쏘드 밖에서 접근 불가 -->
         <aura:attribute name="modalMode"    type="String"/>
     </aura:method>
     <aura:attribute     name="mode"         type="String"/>
-    
 
     <!--토스트나 노티스용 라이브러리-->
     <lightning:notificationsLibrary         aura:id="notificationLib"/>
 
-    <!--부모 아우라 컴포넌트-->
+    <!--부모 아우라 컴포넌트, 자식에서 부모의 Attr에 접근하기 위해 필요-->
     <aura:attribute name="parent"           type="Aura.Component"/>
 
     <!--책 하나 세팅. 디폴트로 초기화 시켜주자.-->

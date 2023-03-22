@@ -7,25 +7,36 @@
                 implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
                 access="global">
 
+    <!-- 노티피케이션 -->
     <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <!-- 스피너 -->
+    <aura:attribute name="isSpinnerOpen"            type="boolean"          default="false"/>
+
     <aura:attribute name="startNum" type="Integer" default="1"/>
     <aura:attribute name="endNum"   type="Integer" default="3"/>
 
-    <body>
-        <div class="slds-box_x-small slds-theme_shade slds-clearfix slds-border_top slds-border_right slds-border_left slds-border_bottom">
-            <div class="slds-float_left">
-                <lightning:card iconName="standard:knowledge" title="지점별 재고관련 갱신" class="slds-theme_shade">
-                </lightning:card>
-            </div>
-            <div class="slds-float_right">
-                <lightning:buttonGroup>
-                    <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBooks_1}"/>
-                    <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
-                    <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
-                </lightning:buttonGroup>
-            </div>
+    <!--스피너-->
+    <aura:if isTrue="{!v.isSpinnerOpen}">
+        <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand" style="position:relative">
+            <span class="slds-assistive-text">생성중</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
         </div>
-    </body>
+    </aura:if>
+    <div class="slds-box_x-small slds-theme_shade slds-clearfix slds-border_top slds-border_right slds-border_left slds-border_bottom">
+        <div class="slds-float_left">
+            <lightning:card iconName="standard:knowledge" title="지점별 재고관련 갱신" class="slds-theme_shade">
+            </lightning:card>
+        </div>
+        <div class="slds-float_right">
+            <lightning:buttonGroup>
+                <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBooks_1}"/>
+                <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
+                <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
+            </lightning:buttonGroup>
+        </div>
+    </div>
 
 
 </aura:component>

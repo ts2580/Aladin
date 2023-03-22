@@ -21,14 +21,20 @@ public with sharing class sc_AladinBatch_3 implements Schedulable, Database.Allo
             MapBranch.put(String.valueOf(ABN.get('Branch__c')), String.valueOf(ABN.get('TotalPrice')));
         }
 
-        List<Branch__c> ListBranch = [SELECT Id, Name, TotalPrice__c FROM Branch__c];
+        List<Branch__c> ListBranch = [SELECT Id, Name, TotalPrice__c, TotalPriceInt__c FROM Branch__c];
 
         for(Branch__c B : ListBranch){
 
             StringPrice = MapBranch.get(B.Id);
-            FormattingPrice = ( Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
-            FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';
-            B.TotalPrice__c = FormattedPrice;
+            try{
+                FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
+                FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';
+                B.TotalPrice__c = FormattedPrice;
+                B.TotalPriceInt__c = Integer.valueOf(StringPrice);
+            }catch(Exception e){
+                B.TotalPrice__c = '재고없음!';
+                B.TotalPriceInt__c = 0;
+            }
         }
 
         update ListBranch;

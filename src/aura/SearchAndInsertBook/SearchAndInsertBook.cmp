@@ -26,6 +26,9 @@
         <aura:attribute name="paramBookExt"             type="BookByVolume__x"              default="{}"/>
     </aura:method>
 
+    <!-- 스피너 -->
+    <aura:attribute     name="isSpinnerOpen"            type="boolean"                      default="false"/>
+
     <div class="slds-grid gridDiv">
         <!-- 왼쪽 영역 -->
         <div class="slds-col slds-size_6-of-12 body slds-border_right">
@@ -158,6 +161,14 @@
                 </lightning:recordEditForm>
             </aura:iteration>
         </div>
+        <!--스피너-->
+        <aura:if isTrue="{!v.isSpinnerOpen}">
+            <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand" style="z-index:9005">
+                <span class="slds-assistive-text">생성중</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </aura:if>
     </div>
 
 </aura:component>

@@ -4,7 +4,7 @@
 
 ({
     searchBook: function(component, event, helper){
-
+        component.set('v.isSpinnerOpen', true);
         let searchWord = event.getSource().get('v.value').trim();
 
         if(searchWord){
@@ -32,6 +32,7 @@
                     }else{
                         component.set('v.listBook', responseBooks);
                     }
+                    component.set('v.isSpinnerOpen', false);
                 }
             })
             $A.enqueueAction(action);
@@ -40,7 +41,7 @@
     },
 
     searchBookExt: function(component, event, helper){
-        
+        component.set('v.isSpinnerOpen', true);
         let searchWord = event.getSource().get('v.value').trim();
 
         if(searchWord){
@@ -68,7 +69,7 @@
                     }else{
                         component.set('v.listBookExt', responseBooks);
                     }
-
+                    component.set('v.isSpinnerOpen', false);
                 }
             })
             $A.enqueueAction(action);
