@@ -8,7 +8,7 @@
                 access="global">
 
     <!-- 노티피케이션 -->
-    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:notificationsLibrary aura:id="notificationLib"/>
 
     <!-- 스피너 -->
     <aura:attribute name="isSpinnerOpen"            type="boolean"          default="false"/>

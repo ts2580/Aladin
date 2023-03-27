@@ -4,29 +4,25 @@
 
 ({
     fnHandleSuccess: function (component, event, helper) {
-        let setToast = component.get('c.setToast');
-
-        let toastMap = new Map();
-        toastMap.set('variant', 'success');
-        toastMap.set('message', '책 정보 수정 성공.');
-
-        component.set('v.toastMap', toastMap);
-        $A.enqueueAction(setToast);
+       helper.setToast(component, "success", "책 정보 수정 성공.");
     },
 
     fnHandleError: function (component, event, helper) {
-        let setToast = component.get('c.setToast');
-
-        let toastMap = new Map();
-        toastMap.set('variant', 'error');
-        toastMap.set('message', '책 정보 수정 실패.');
-
-        component.set('v.toastMap', toastMap);
-        $A.enqueueAction(setToast);
+        helper.setToast(component, "error", "책 정보 수정 실패.");
     },
 
     fnSearchBook: function(component, event, helper){
         helper.searchBook(component, event, helper);
+    },
+
+    fnClearBookInt: function(component, event, helper){
+        let emptyArray = [];
+        component.set('v.listBook', emptyArray);
+    },
+
+    fnClearBookExt: function(component, event, helper){
+        let emptyArray = [];
+        component.set('v.listBookExt', emptyArray);
     },
 
     fnDoIf: function(component, event, helper){
@@ -58,23 +54,31 @@
     },
 
     fnSetAndCloseModal: function(component, event, helper){
-        helper.setAndCloseModal(component, event, helper);
+        let result = event.getParam('arguments');
+        let objBook = result.paramBook;
+
+        let listBook = new Array();
+        listBook.push(objBook);
+
+        component.set('v.listBook', listBook);
+        component.set('v.isBookInsertModalOpen', false);
     },
 
     fnSetAndCloseModalExt: function(component, event, helper){
-        helper.setAndCloseModalExt(component, event, helper);
+        let result = event.getParam('arguments');
+        let objBook = result.paramBookExt;
+
+        let listBookExt = new Array();
+        listBookExt.push(objBook);
+
+        // External Object에 넣는건 Async로 들어가기땜에 Id값을 못 가져옴.
+        // 이 경우 recordEditForm에 Id 세팅이 무의미하단 소리
+        // inputField에 따로 value 설정 해줌. 짜피 If 날릴떈 Name으로 하니깐 뭐
+        component.set('v.listBookExt', listBookExt);
+        component.set('v.isBookInsertModalOpen', false);
     },
 
     fnSearchBookExt: function(component, event, helper){
         helper.searchBookExt(component, event, helper);
-    },
-
-    setToast: function (component, event, helper) {
-        let toastMap = component.get('v.toastMap');
-        component.find('notificationLib').showToast({
-            'variant' : toastMap.get('variant'),
-            'message' : toastMap.get('message'),
-            'mode'    : 'dismissible'
-        });
     },
 });

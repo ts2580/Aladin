@@ -35,7 +35,7 @@
         빼면 비동기가 이상하게 작동함...
 
         아니 근데 $A.enqueueAction(action);도 비동기로 작동해가지고
-        call out이 짜피 비동기로 쌓이네 시밤...
+        call out이 짜피 비동기로 쌓이네
         롤뺵!
         */
         helper.setBranchBook_1(component, event, helper);

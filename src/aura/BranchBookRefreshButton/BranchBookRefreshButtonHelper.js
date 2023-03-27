@@ -8,12 +8,7 @@
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                component.find('notifLib').showToast({
-                    "variant": "success",
-                    "header": "재고 갱신",
-                    "message": "지점별 재고 정보를 갱신중입니다.",
-                    "mode": "dismissible"
-                });
+                this.setToast(component, "success", "지점별 재고 정보를 갱신하였습니다.");
             }
             component.set('v.isSpinnerOpen', false);
         });
@@ -29,12 +24,7 @@
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                component.find('notifLib').showToast({
-                    "variant": "success",
-                    "header": "재고 갱신",
-                    "message": "지점별 재고 정보 2를 갱신중입니다.",
-                    "mode": "dismissible"
-                });
+                this.setToast(component, "success", "지점별 재고 정보 2를 갱신중입니다.");
             }
         });
 
@@ -48,12 +38,7 @@
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                component.find('notifLib').showToast({
-                    "variant": "success",
-                    "header": "재고 갱신",
-                    "message": "지점별 재고 정보3을 갱신중입니다.",
-                    "mode": "dismissible"
-                });
+                this.setToast(component, "success", "지점별 재고 정보 3을 갱신중입니다.");
             }
         });
 
@@ -69,12 +54,7 @@
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                component.find('notifLib').showToast({
-                    "variant": "success",
-                    "header": "재실행",
-                    "message": "실패한 인터페이스를 재실행합니다.",
-                    "mode": "dismissible"
-                });
+                this.setToast(component, "success", "실패한 인터페이스를 재실행하였습니다.");
             }
             component.set('v.isSpinnerOpen', false);
         });
@@ -91,15 +71,18 @@
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                component.find('notifLib').showToast({
-                    "variant": "success",
-                    "header": "재고 갱신",
-                    "message": "지점별 재고 총액 정보를 갱신중입니다.",
-                    "mode": "dismissible"
-                });
+                this.setToast(component, "success", "지점별 재고 총액 정보를 갱신하였습니다.");
             }
             component.set('v.isSpinnerOpen', false);
         });
         $A.enqueueAction(action);
-    }
+    },
+
+    setToast: function (component, variant, message) {
+        component.find('notificationLib').showToast({
+            'variant' : variant,
+            'message' : message,
+            'mode'    : 'dismissible'
+        });
+    },
 });

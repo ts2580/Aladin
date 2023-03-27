@@ -124,4 +124,10 @@ public with sharing class AladinHomePageComponentController {
         update ListBranch;
     }
 
+    @AuraEnabled
+    public static void deleteIfLog(){
+        List<InterfaceLog__c> InterfaceLog= [SELECT Id FROM InterfaceLog__c];
+        delete InterfaceLog;
+    }
+
 }

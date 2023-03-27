@@ -1,0 +1,18 @@
+<!--
+ - Created by 한성진 on 2023-03-24.
+ -->
+
+<aura:component description="DeleteIfLogButton"
+                controller="AladinHomePageComponentController"
+                implements="lightning:isUrlAddressable,lightning:hasPageReference,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction"
+                access="global">
+
+    <!-- 스피너 -->
+    <aura:attribute name="isSpinnerOpen"            type="boolean"          default="false"/>
+
+    <lightning:button label="로그 삭제"
+                     class="slds-m-left_small"
+                     variant="neutral"
+                     onclick="{!c.fnDeleteIf}"
+    />
+</aura:component>

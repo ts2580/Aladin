@@ -21,14 +21,7 @@
                     let responseBooks = action.getReturnValue();
 
                     if(responseBooks.length == 0){
-                        let setToast = component.get('c.setToast');
-
-                        let toastMap = new Map();
-                        toastMap.set('variant', 'Warning');
-                        toastMap.set('message', '검색 결과가 없습니다.');
-
-                        component.set('v.toastMap', toastMap);
-                        $A.enqueueAction(setToast);
+                        this.setToast(component, "Warning", "검색 결과가 없습니다.");
                     }else{
                         component.set('v.listBook', responseBooks);
                     }
@@ -58,14 +51,7 @@
                     let responseBooks = action.getReturnValue();
 
                     if(responseBooks.length == 0){
-                        let setToast = component.get('c.setToast');
-
-                        let toastMap = new Map();
-                        toastMap.set('variant', 'Warning');
-                        toastMap.set('message', '검색 결과가 없습니다.');
-
-                        component.set('v.toastMap', toastMap);
-                        $A.enqueueAction(setToast);
+                        this.setToast(component, "Warning", "검색 결과가 없습니다.");
                     }else{
                         component.set('v.listBookExt', responseBooks);
                     }
@@ -78,6 +64,8 @@
     },
 
     doIf: function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
 
         // Autonumber는 childComponent에서 파라미터로 오브젝트 넘길때 안들어옴. 오토넘버 생성시 시간이 좀 걸리는것으로 판단됨.
         // IF_GetBookInfo의 IF 메소드의 매개변수를 Name 필드로 변경함
@@ -92,19 +80,13 @@
             let state = response.getState();
 
             if(state === 'SUCCESS'){
-                let setToast = component.get('c.setToast');
-
-                let toastMap = new Map();
-                toastMap.set('variant', 'success');
-                toastMap.set('message', '책 정보 받아오기 성공.');
-
-                component.set('v.toastMap', toastMap);
-                $A.enqueueAction(setToast);
+                this.setToast(component, "success", "책 정보 받아오기 성공.");
 
                 let responseBooks = action.getReturnValue();
                 
                 component.set('v.listBook', responseBooks);
                 component.set('v.isBookInsertModalOpen', false);
+                component.set('v.isSpinnerOpen', false);
 
             }
         })
@@ -112,6 +94,8 @@
     },
 
     doIfExt: function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
 
         let title = event.getSource().get('v.value').trim();
         let action = component.get('c.getBookExtInfo');
@@ -124,27 +108,23 @@
             let state = response.getState();
 
             if(state === 'SUCCESS'){
-                let setToast = component.get('c.setToast');
-
-                let toastMap = new Map();
-                toastMap.set('variant', 'success');
-                toastMap.set('message', '책 정보 받아오기 성공.');
-
-                component.set('v.toastMap', toastMap);
-                $A.enqueueAction(setToast);
+                this.setToast(component, "success", "책 정보 받아오기 성공.");
 
                 let responseBooks = action.getReturnValue();
                 
                 component.set('v.listBookExt', responseBooks);
                 component.set('v.isBookInsertModalOpen', false);
+                component.set('v.isSpinnerOpen', false);
             }
         })
         $A.enqueueAction(action);
     },
 
     deleteBook: function(component, event, helper){
-        let bookId = event.getSource().get('v.value');
 
+        component.set('v.isSpinnerOpen', true);
+
+        let bookId = event.getSource().get('v.value');
         let action = component.get('c.deleteBookExt');
 
         action.setParams({
@@ -153,49 +133,23 @@
 
         action.setCallback(this, function(response){
             let state = response.getState();
-            let setToast = component.get('c.setToast');
-            let toastMap = new Map();
 
             if(state === 'SUCCESS'){
-                
-                toastMap.set('variant', 'success');
-                toastMap.set('message', '책 삭제 성공.');
-
-                component.set('v.toastMap', toastMap);
+                this.setToast(component, "success", "책 삭제 성공.");
             }else{
-                toastMap.set('variant', 'error');
-                toastMap.set('message', '책 삭제 실패.');
-                component.set('v.toastMap', toastMap);
-                
+                this.setToast(component, "error", "책 삭제 실패.");
             }
-            $A.enqueueAction(setToast);
+            component.set('v.isSpinnerOpen', false);
         })
         $A.enqueueAction(action);
     },
 
-    setAndCloseModal: function(component, event, helper){
-        let result = event.getParam('arguments');
-        let objBook = result.paramBook;
-
-        let listBook = new Array();
-        listBook.push(objBook);
-
-        component.set('v.listBook', listBook);
-        component.set('v.isBookInsertModalOpen', false);
-    },
-
-    setAndCloseModalExt: function(component, event, helper){
-        let result = event.getParam('arguments');
-        let objBook = result.paramBookExt;
-
-        let listBookExt = new Array();
-        listBookExt.push(objBook);
-        
-        // External Object에 넣는건 Async로 들어가기땜에 Id값을 못 가져옴. 
-        // 이 경우 recordEditForm에 Id 세팅이 무의미하단 소리
-        // inputField에 따로 value 설정 해줌. 짜피 If 날릴떈 Name으로 하니깐 뭐
-        component.set('v.listBookExt', listBookExt);
-        component.set('v.isBookInsertModalOpen', false);
+    setToast: function (component, variant, message) {
+        component.find('notificationLib').showToast({
+            'variant' : variant,
+            'message' : message,
+            'mode'    : 'dismissible'
+        });
     },
     
 });

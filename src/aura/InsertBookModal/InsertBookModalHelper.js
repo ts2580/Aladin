@@ -15,11 +15,8 @@
             let state = response.getState();
 
             if(state === "SUCCESS"){
-                component.find('notificationLib').showToast({
-                    "message": "새 책이 생성되었습니다.",
-                    "variant": "success",
-                    "mode"   : "dismissible"
-                });
+
+                this.setToast(component, "success", "새 책이 생성되었습니다.");
 
                 let insertedBook = response.getReturnValue();
                 let parentComponent = component.get("v.parent");
@@ -36,11 +33,7 @@
                     parentComponent.fnSetAndCloseModal(insertedBook);
                 }
             }else{
-                component.find('notificationLib').showToast({
-                    "message": "새 책 생성을 실패하였습니다.",
-                    "variant": "error",
-                    "mode"   : "dismissible"
-                });
+                this.setToast(component, "error", "새 책 생성을 실패하였습니다.");
             }
         });
 
@@ -59,11 +52,7 @@
             let state = response.getState();
 
             if(state === "SUCCESS"){
-                component.find('notificationLib').showToast({
-                    "message": "새 책이 생성되었습니다.",
-                    "variant": "success",
-                    "mode"   : "dismissible"
-                });
+                this.setToast(component, "success", "새 책이 생성되었습니다.");
 
                 let insertedBook = response.getReturnValue();
                 let parentComponent = component.get("v.parent");
@@ -80,14 +69,18 @@
                     parentComponent.fnSetAndCloseModalExt(insertedBook);
                 }
             }else{
-                component.find('notificationLib').showToast({
-                    "message": "새 책 생성을 실패하였습니다.",
-                    "variant": "error",
-                    "mode"   : "dismissible"
-                });
+                this.setToast(component, "error", "새 책 생성을 실패하였습니다.");
             }
         });
 
         $A.enqueueAction(action);
+    },
+
+    setToast: function (component, variant, message) {
+        component.find('notificationLib').showToast({
+            'variant' : variant,
+            'message' : message,
+            'mode'    : 'dismissible'
+        });
     },
 });
