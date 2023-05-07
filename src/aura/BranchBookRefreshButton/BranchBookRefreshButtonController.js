@@ -41,7 +41,9 @@
         helper.setBranchBook_1(component, event, helper);
     },
 
-    
+    fnDoManualIf : function(component, event, helper) {
+        helper.doManualIf(component, event, helper);
+    },
 
 	rerun : function(component, event, helper) {
         helper.rerunFailedIF(component, event, helper);

@@ -7,6 +7,8 @@ public with sharing class IF_GetDropshippingUsedBook {
     @Future(Callout = true)
     public static void getBookListInfo(Integer StartNum, Integer ENDNum){
 
+        System.debug('strNum : ' + StartNum + ' ~ endNum : ' + ENDNum);
+
         IF_Util IF_Util = new IF_Util();
         List<InterfaceLog__c> listIFL = new List<InterfaceLog__c>();
         List<BookByVolume__x> ListBooks = new List<BookByVolume__x>();
@@ -109,12 +111,6 @@ public with sharing class IF_GetDropshippingUsedBook {
                 }
             }
             insert ListBranchBook;
-            insert listIFL;
-        }else{
-            InterfaceLog__c IFL = new InterfaceLog__c();
-            IFL.StartNum__c = StartNum;
-            IFL.ENDNum__c = ENDNum;
-            IFL.Name = ' Seq ' + StartNum + ' ~ ' + ENDNum +'사이 중고책 정보 알라딘에서 받아오기 에러 발생';
             insert listIFL;
         }
     }

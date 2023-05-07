@@ -17,6 +17,42 @@
 
     },
 
+    doManualIf : function(component, event, helper) {
+
+        let isFirstTry = component.get("v.isFirstTry");
+        let tryNum = component.get("v.tryNum");
+        let strNum = component.get("v.startNum");
+        let endNum = component.get("v.endNum");
+
+        let action = component.get("c.refreshBookManual");
+
+        action.setParams({
+            'isFirstTry': isFirstTry,
+            'strNum': strNum,
+            'endNum': endNum
+        });
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+
+            if(state === "SUCCESS" && component.isValid()){
+
+                this.setToast(component, "success", strNum + "번 Seq 부터 " + endNum + "번 Seq까지 실행 완료");
+
+                strNum = endNum;
+                endNum = 30*tryNum;
+                tryNum++;
+
+                component.set("v.isFirstTry", false);
+                component.set("v.tryNum", tryNum);
+                component.set("v.startNum", strNum);
+                component.set("v.endNum", endNum);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+
     setBranchBook_2 : function(component, event, helper){
 
         let action = component.get("c.refreshBook_2");

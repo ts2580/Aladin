@@ -4,6 +4,8 @@
 
 public with sharing class AladinHomePageComponentController {
 
+    // Todo 헤로쿠에 external relationship 필드 넣어놓고, 그거 바뀌면 해당사항 반영하는지 확인하기
+
     @AuraEnabled(Cacheable=true)
     public static List<Branch__c> getBranch(){
 
@@ -40,16 +42,16 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
-    public static void refreshBook_2(){
+    public static void refreshBookManual(Integer strNum, Integer endNum, Boolean isFirstTry){
 
-        Integer startNum = 1470;
-        Integer endNum = 1500;
+        Boolean param = isFirstTry;
 
-        for(Integer i = 51; i < 100; i++){
-            IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
-            startNum = endNum;
-            endNum = 30*i;
+        if(param){
+            List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
+            delete BranchBook;
         }
+
+        IF_GetDropshippingUsedBook.getBookListInfo(strNum, endNum);
     }
 
     @AuraEnabled

@@ -18,8 +18,8 @@
                             iconName="custom:custom98">
                         {!branch.TotalPrice__c}
                         <lightning:button
-                            name="{!branch.Id}" 
-                            class="slds-m-left_x-large btn_branch" 
+                            name="{!branch.Id}"
+                            class="slds-m-left_x-large btn_branch"
                             label="새창에서 열기" 
                             onclick="{!c.goBranch}"/>
                     </lightning:card>

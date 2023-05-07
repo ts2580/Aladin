@@ -34,14 +34,14 @@
                     SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Book__c, Seq__c, Type__c
                     FROM BookByVolume__x
                     WHERE Name__c LIKE: searchWord
-                    ORDER BY Book__c, Volume__c ASC
+                    ORDER BY Book__c, Volume__c DESC
             ];
         }else if(!String.isBlank(title) && title.length() == 18){
             listBook = [
                     SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Book__c, Seq__c, Type__c
                     FROM BookByVolume__x
                     WHERE Book__c =: title
-                    ORDER BY Book__c, Volume__c ASC
+                    ORDER BY Book__c, Volume__c DESC
             ];
         }
 
