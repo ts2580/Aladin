@@ -9,7 +9,11 @@ public with sharing class AladinHomePageComponentController {
     @AuraEnabled(Cacheable=true)
     public static List<Branch__c> getBranch(){
 
-        List<Branch__c> listBranch = [SELECT Id, Name, TotalPrice__c FROM Branch__c ORDER BY TotalPriceInt__c DESC];
+        List<Branch__c> listBranch = [
+                SELECT Id, Name, TotalPrice__c
+                FROM Branch__c
+                ORDER BY TotalPriceInt__c DESC
+        ];
 
         return listBranch;
     }
@@ -17,10 +21,12 @@ public with sharing class AladinHomePageComponentController {
     @AuraEnabled(Cacheable=true)
     public static List<BookByVolume__x> getBook(Id recordId){
 
-        List<BookByVolume__x> listBookByVolume = [SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c
-                                                  FROM BookByVolume__x
-                                                  WHERE Book__c =: recordId
-                                                  ORDER BY Volume__c];
+        List<BookByVolume__x> listBookByVolume = [
+                SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c, Book__c, Type__c
+                FROM BookByVolume__x
+                WHERE Book__c =: recordId
+                ORDER BY Volume__c
+        ];
 
         return listBookByVolume;
     }
@@ -28,7 +34,10 @@ public with sharing class AladinHomePageComponentController {
     @AuraEnabled
     public static void refreshBook_1(){
 
-        List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
+        List<BranchBook__c> BranchBook= [
+                SELECT Id
+                FROM BranchBook__c
+        ];
         delete BranchBook;
 
         Integer startNum = 1;
@@ -47,7 +56,10 @@ public with sharing class AladinHomePageComponentController {
         Boolean param = isFirstTry;
 
         if(param){
-            List<BranchBook__c> BranchBook= [SELECT Id FROM BranchBook__c];
+            List<BranchBook__c> BranchBook= [
+                    SELECT Id
+                    FROM BranchBook__c
+            ];
             delete BranchBook;
         }
 
@@ -96,10 +108,12 @@ public with sharing class AladinHomePageComponentController {
         String FormattingPrice = null;
         String FormattedPrice = null;
 
-        List<AggregateResult> AggregateBranchName = [SELECT Branch__c, SUM(f_MinPrice__c) TotalPrice
-        FROM BranchBook__c
-        GROUP BY Branch__c
-        ORDER BY SUM(f_MinPrice__c) DESC];
+        List<AggregateResult> AggregateBranchName = [
+                SELECT Branch__c, SUM(f_MinPrice__c) TotalPrice
+                FROM BranchBook__c
+                GROUP BY Branch__c
+                ORDER BY SUM(f_MinPrice__c) DESC
+        ];
 
         Map<Id, String> MapBranch = new Map<Id, String>();
 
@@ -107,7 +121,10 @@ public with sharing class AladinHomePageComponentController {
             MapBranch.put(String.valueOf(ABN.get('Branch__c')), String.valueOf(ABN.get('TotalPrice')));
         }
 
-        List<Branch__c> ListBranch = [SELECT Id, Name, TotalPrice__c, TotalPriceInt__c FROM Branch__c];
+        List<Branch__c> ListBranch = [
+                SELECT Id, Name, TotalPrice__c, TotalPriceInt__c
+                FROM Branch__c
+        ];
 
         for(Branch__c B : ListBranch){
 
@@ -128,8 +145,10 @@ public with sharing class AladinHomePageComponentController {
 
     @AuraEnabled
     public static void deleteIfLog(){
-        List<InterfaceLog__c> InterfaceLog= [SELECT Id FROM InterfaceLog__c];
+        List<InterfaceLog__c> InterfaceLog= [
+                SELECT Id
+                FROM InterfaceLog__c
+        ];
         delete InterfaceLog;
     }
-
 }

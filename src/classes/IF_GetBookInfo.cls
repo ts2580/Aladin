@@ -12,7 +12,8 @@ public with sharing class IF_GetBookInfo {
         List<Book__c> ListBooks = [
                 SELECT Id, Name, Type__c, Cover__c
                 FROM Book__c
-                WHERE Name =: title];
+                WHERE Name =: title
+        ];
         List<BookByVolume__x> ListBookByVolume = new List<BookByVolume__x>();
 
         for(Book__c LB : ListBooks){
@@ -27,7 +28,6 @@ public with sharing class IF_GetBookInfo {
 
             List<Object> Books = new List<Object>();
             Integer price;
-
 
             if (response.getStatusCode() == 200) {
 

@@ -9,7 +9,7 @@ public with sharing class IF_InsertLatestBook {
         IF_Util IF_Util = new IF_Util();
         Map<String, Object> BookMap = new Map<String, Object>();
         List<BookByVolume__x> ListBooks = [
-                SELECT Id, ISBN13__c, Name__c, Price__c, Cover__c, Book__c, Volume__c
+                SELECT Id, ISBN13__c, Name__c, Price__c, Cover__c, Volume__c, Book__c, Type__c
                 FROM BookByVolume__x
                 WHERE Name__c =: title];
 
@@ -56,4 +56,5 @@ public with sharing class IF_InsertLatestBook {
         Database.updateAsync(ListBooks);
         return ListBooks;
     }
+
 }

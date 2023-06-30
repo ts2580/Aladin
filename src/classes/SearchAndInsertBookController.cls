@@ -31,14 +31,14 @@
 
         if(!String.isBlank(title) && title.length() != 18){
             listBook = [
-                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Book__c, Seq__c, Type__c
+                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c
                     FROM BookByVolume__x
                     WHERE Name__c LIKE: searchWord
                     ORDER BY Book__c, Volume__c DESC
             ];
         }else if(!String.isBlank(title) && title.length() == 18){
             listBook = [
-                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Book__c, Seq__c, Type__c
+                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c
                     FROM BookByVolume__x
                     WHERE Book__c =: title
                     ORDER BY Book__c, Volume__c DESC
@@ -82,9 +82,28 @@
         return IF_InsertLatestBook.insertLatestBook(title);
     }
 
+     @AuraEnabled
+     public static List<BookByVolume__x> getLatestBook(){
+
+         List<BookByVolume__x> ListBooks = [
+                 SELECT Id, ISBN13__c, Name__c, Price__c, Cover__c, Volume__c, Book__c, Type__c
+                 FROM BookByVolume__x
+                 WHERE IsPurchased__c = FALSE
+                 AND NoNeedToBuy__c = FALSE
+                 ORDER BY Id DESC
+                 LIMIT 50
+         ];
+
+         return ListBooks;
+     }
+
     @AuraEnabled
     public static void deleteBookExt(Integer bookId){
-        BookByVolume__x objBook = [SELECT Id__c FROM BookByVolume__x WHERE Id__c =: bookId];
+        BookByVolume__x objBook = [
+                SELECT Id__c
+                FROM BookByVolume__x
+                WHERE Id__c =: bookId
+        ];
         Database.deleteAsync(objBook);
     }
 

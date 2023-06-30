@@ -114,6 +114,11 @@
                                       onclick="{!c.fnOpenBookExtInsertModal}"
                                       class="saveBtn slds-m-top_large slds-m-left_large"
                     />
+                    <lightning:button label="최근 삽입한 책"
+                                      variant="neutral"
+                                      onclick="{!c.fnShowInsertedBook}"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                    />
                     <lightning:button label="검색창 비우기"
                                       variant="destructive"
                                       class="saveBtn slds-m-top_large slds-m-left_large"

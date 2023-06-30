@@ -25,6 +25,12 @@
         component.set('v.listBookExt', emptyArray);
     },
 
+    fnShowInsertedBook: function(component, event, helper){
+        let emptyArray = [];
+        component.set('v.listBookExt', emptyArray);
+        helper.showInsertedBook(component, event, helper);
+    },
+
     fnDoIf: function(component, event, helper){
         helper.doIf(component, event, helper);
     },

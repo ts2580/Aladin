@@ -93,6 +93,27 @@
         $A.enqueueAction(action);
     },
 
+    showInsertedBook: function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
+
+        let action = component.get('c.getLatestBook');
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+
+            if(state === 'SUCCESS'){
+                this.setToast(component, "success", "책 정보 받아오기 성공.");
+
+                let responseBooks = action.getReturnValue();
+
+                component.set('v.listBookExt', responseBooks);
+                component.set('v.isSpinnerOpen', false);
+            }
+        })
+        $A.enqueueAction(action);
+    },
+
     doIfExt: function(component, event, helper){
 
         component.set('v.isSpinnerOpen', true);
