@@ -93,7 +93,6 @@
                         <lightning:recordEditForm objectApiName="BookByVolume__x" density="compact">
                             <div class="slds-grid slds-gutters" style="width:40vw">
                                 <div class="slds-col slds-size_1-of-2">
-                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Type__c}" fieldName="Type__c"/>
                                     <lightning:inputField aura:id="bookField" value="{!v.bookExt.Book__c}" fieldName="Book__c"/>
                                     <lightning:inputField aura:id="bookField" value="{!v.bookExt.Name__c}" fieldName="Name__c"/>
                                 </div>

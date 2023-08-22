@@ -145,19 +145,24 @@
                             <lightning:inputField value="{!objBook.IsPurchased__c}" fieldName="IsPurchased__c" />
                             <lightning:inputField value="{!objBook.Cover__c}"       fieldName="Cover__c"/>
                             <lightning:inputField value="{!objBook.Book__c}"        fieldName="Book__c"/>
-                            <lightning:inputField value="{!objBook.Seq__c}"         fieldName="Seq__c"/>
                         </div>
                         <div class="slds-col slds-size_3-of-12">
                             <lightning:inputField value="{!objBook.Type__c}"        fieldName="Type__c"/>
                             <lightning:inputField value="{!objBook.Name__c}"        fieldName="Name__c"/>
                             <lightning:inputField value="{!objBook.Volume__c}"      fieldName="Volume__c"/>
                         </div>
-                        <div class="slds-col slds-size_1-of-12 slds-m-top_xx-large">
+                        <div class="slds-col slds-size_1-of-12">
                             <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
                                               label="&ensp;&ensp;IF&ensp;&ensp;"
                                               variant="success"
                                               value="{!objBook.Name__c}"
                                               onclick="{!c.fnDoIfExt}"
+                            />
+                            <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                              label="&nbsp;새 책&nbsp;"
+                                              variant="success"
+                                              value="{!objBook.Link__c}"
+                                              onclick="{!c.fnGoAla}"
                             />
                             <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
                                               label="Delete"

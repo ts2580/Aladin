@@ -11,11 +11,26 @@ import {updateRecord} from 'lightning/uiRecordApi';
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 
 const bookColumns =  [
-    {label: '제목', fieldName: 'Name__c', type: 'text', editable: true},
+    {
+         label: '제목',
+         fieldName: 'Name__c',
+         type: 'button',
+         typeAttributes: {
+             label: {
+                 fieldName: 'Name__c'
+             },
+             class : 'btn_next'
+         }
+     },
     {label: '구매여부', fieldName: 'IsPurchased__c', type: 'boolean', editable: true},
     {label: '가격', fieldName: 'Price__c', type: 'text', editable: true},
     {label: '권', fieldName: 'Volume__c', type: 'Number', editable: true},
-    {label: '표지', fieldName: 'Cover__c', type: 'image', editable: true},
+    {
+        label: '표지',
+        fieldName: 'Cover__c',
+        type: 'image',
+        editable: true
+    },
 ];
 
 export default class BookPageLwc extends LightningElement {

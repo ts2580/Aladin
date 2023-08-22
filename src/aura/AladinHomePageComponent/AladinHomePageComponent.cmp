@@ -4,7 +4,6 @@
                 access="global">
 
     <aura:handler name="init" value="{!this}" action="{!c.fnInit}" />
-    <!--<aura:attribute name="recordId" type="String"/>-->
     <aura:attribute name="listBranch" type="Branch__c[]"/>
 
     <body>

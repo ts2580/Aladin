@@ -16,8 +16,12 @@
     <!--수동 작업용-->
     <aura:attribute name="isFirstTry"               type="boolean"          default="true"/>
     <aura:attribute name="tryNum"                   type="Integer"          default="2"/>
-    <aura:attribute name="startNum"                 type="Integer"          default="1"/>
+    <aura:attribute name="startNum"                 type="Integer"          default="0"/>
     <aura:attribute name="endNum"                   type="Integer"          default="30"/>
+
+    <!--BookExt-->
+    <aura:attribute name="BookExt"                  type="BookByVolume__x[]"/>
+    <aura:attribute name="BranchBookExt"            type="BranchBookExt__x[]"/>
 
     <!--스피너-->
     <aura:if isTrue="{!v.isSpinnerOpen}">
@@ -58,7 +62,10 @@
             <div class="slds-col slds-size_9-of-12">
                 <div class="slds-float_right">
                     <div class="slds-grid slds-gutters">
-                        <div class="slds-col slds-size_4-of-12">
+                        <div class="slds-col slds-size_3-of-12">
+                            <lightning:button label="대상 책 가져오기" onclick="{!c.fnGetBookExt}"></lightning:button>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
                             <lightning:input
                                     label="시작 Seq"
                                     variant="label-hidden"
@@ -67,7 +74,7 @@
                             >
                             </lightning:input>
                         </div>
-                        <div class="slds-col slds-size_4-of-12">
+                        <div class="slds-col slds-size_3-of-12">
                             <lightning:input
                                     label="종료 Seq"
                                     variant="label-hidden"
@@ -76,8 +83,9 @@
                             >
                             </lightning:input>
                         </div>
-                        <div class="slds-col slds-size_4-of-12">
+                        <div class="slds-col slds-size_3-of-12">
                             <lightning:button label="시작" onclick="{!c.fnDoManualIf}"></lightning:button>
+                            <lightning:button label="삽입" onclick="{!c.fnInsertBranchBook}"></lightning:button>
                         </div>
                     </div>
                 </div>

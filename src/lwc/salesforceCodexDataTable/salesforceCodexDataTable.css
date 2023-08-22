@@ -1,11 +1,8 @@
 /**
- * Created by 한성진 on 2022-11-25.
+ * Created by HSJ on 2023-07-01.
  */
-:host {
-    --sds-c-card-color-background: #f3f3f3;
-}
 
-.btn_next button{
+.btn_next button {
     background-color : transparent;
     border : none;
     border-radius : 0px;

@@ -22,7 +22,7 @@ public with sharing class AladinHomePageComponentController {
     public static List<BookByVolume__x> getBook(Id recordId){
 
         List<BookByVolume__x> listBookByVolume = [
-                SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c, Book__c, Type__c
+                SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c, Book__c, Type__c, Description__c
                 FROM BookByVolume__x
                 WHERE Book__c =: recordId
                 ORDER BY Volume__c
@@ -40,52 +40,99 @@ public with sharing class AladinHomePageComponentController {
         ];
         delete BranchBook;
 
-        Integer startNum = 1;
-        Integer endNum = 30;
+        List<BookByVolume__x> listBooks = [
+                SELECT ISBN13__c, Name__c, Volume__c, Seq__c, Type__c, Book__c
+                FROM BookByVolume__x
+                WHERE IsPurchased__c = FALSE
+                AND NoNeedToBuy__c = FALSE
+        ];
 
-        for(Integer i = 2; i < 52; i++){
-            IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
-            startNum = endNum;
-            endNum = 30*i;
+        List<BookByVolume__x> listSplitedBook = new List<BookByVolume__x>();
+
+        // 비동기 메소드는 sObject 안받아. 프리미티브 타입으로 보내야함. 비동기로 쏘는 도중 데이터가 바뀌는것(무결성?) 방지
+        // 따라서 Id만 set으로 보내서 다시 쿼리 하라고 하는데, 그러면 헤로쿠에서 하꺼번에 쿼리해서 가져오는 의미가 없지.
+        // 바로 제이슨으로 씨리얼라이즈 해서 보내고, sObject로 디씨리얼라이즈 해서 받는다.
+        for(Integer i = 0; i < listBooks.size(); i++){
+            listSplitedBook.add(listBooks[i]);
+
+            if(Math.mod(i,30) == 0){
+                IF_GetDropshippingUsedBook.getStockAsync(JSON.serialize(listSplitedBook));
+                listSplitedBook.clear();
+            }
         }
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<BookByVolume__x> getBooKAll(){
+
+        List<BookByVolume__x> listBookByVolume = [
+                SELECT ISBN13__c, Name__c, Volume__c, Seq__c, Type__c, Book__c
+                FROM BookByVolume__x
+                WHERE IsPurchased__c = FALSE
+                AND NoNeedToBuy__c = FALSE
+        ];
+
+        return listBookByVolume;
+    }
+
     @AuraEnabled
-    public static void refreshBookManual(Integer strNum, Integer endNum, Boolean isFirstTry){
+    public static List<BranchBookExt__x> refreshBookManual(List<BookByVolume__x> listBooks, Integer strNum, Integer endNum, Boolean isFirstTry){
 
         Boolean param = isFirstTry;
 
-        if(param){
-            List<BranchBook__c> BranchBook= [
+        List<BranchBookExt__x> listBranchBookExt = new List<BranchBookExt__x>();
+
+        List<BookByVolume__x> listTargetBook = new List<BookByVolume__x>();
+
+        for(Integer i = 0; i < listBooks.size(); i++){
+            if(i >= strNum && i <  endNum){
+                listTargetBook.add(listBooks[i]);
+            }
+        }
+
+        /*if(param){
+            *//*List<BranchBook__c> BranchBook= [
                     SELECT Id
                     FROM BranchBook__c
             ];
-            delete BranchBook;
-        }
+            delete BranchBook;*//*
 
-        IF_GetDropshippingUsedBook.getBookListInfo(strNum, endNum);
+            List<BranchBookExt__x> BranchBook= [
+                    SELECT Id, Id__c
+                    FROM BranchBookExt__x
+            ];
+
+            Database.deleteAsync(BranchBook);
+        }*/
+
+        listBranchBookExt = IF_GetDropshippingUsedBook.getBookListInfo(listTargetBook, strNum, endNum);
+
+        return listBranchBookExt;
+
     }
 
-    @AuraEnabled
-    public static void refreshBook_3(){
+    @AuraEnabled(Cacheable=true)
+    public static String insertBranchBook(List<BranchBookExt__x> listBranchBookExt){
 
-        Integer startNum = 2970;
-        Integer endNum = 3000;
+        String isSuccess = '1';
 
-        for(Integer i = 101; i < 150; i++){
-            IF_GetDropshippingUsedBook.getBookListInfo(startNum, endNum);
-            startNum = endNum;
-            endNum = 30*i;
+        try {
+            Database.insertAsync(listBranchBookExt);
+        }catch (Exception e){
+            isSuccess = '2';
         }
+
+
+        return isSuccess;
     }
 
     @AuraEnabled
     public static void rerunFailedIF(){
 
         List<InterfaceLog__c> InterfaceLog= [
-            SELECT Id, StartNum__c, ENDNum__c
-            FROM InterfaceLog__c
-            WHERE IsRerun__c = FALSE
+                SELECT Id, StartNum__c, ENDNum__c
+                FROM InterfaceLog__c
+                WHERE IsRerun__c = FALSE
         ];
 
         Decimal startNum = 0;
@@ -94,7 +141,7 @@ public with sharing class AladinHomePageComponentController {
         for(InterfaceLog__c IFG : InterfaceLog){
             startNum = IFG.StartNum__c;
             endNum = IFG.ENDNum__c;
-            IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
+            // IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
             IFG.IsRerun__c = true;
         }
 
@@ -108,17 +155,26 @@ public with sharing class AladinHomePageComponentController {
         String FormattingPrice = null;
         String FormattedPrice = null;
 
-        List<AggregateResult> AggregateBranchName = [
-                SELECT Branch__c, SUM(f_MinPrice__c) TotalPrice
-                FROM BranchBook__c
-                GROUP BY Branch__c
-                ORDER BY SUM(f_MinPrice__c) DESC
+        List<BranchBookExt__x> listBranchBook = [
+                SELECT Branch__c, MinPrice__c
+                FROM BranchBookExt__x
         ];
 
-        Map<Id, String> MapBranch = new Map<Id, String>();
+        Map<String, Integer> mapTotalPric = new Map<String, Integer>();
 
-        for(AggregateResult ABN : AggregateBranchName){
-            MapBranch.put(String.valueOf(ABN.get('Branch__c')), String.valueOf(ABN.get('TotalPrice')));
+        Integer price = 0;
+        for(BranchBookExt__x obj : listBranchBook){
+
+            price = 0;
+
+            if(String.isNotBlank(String.valueOf(mapTotalPric.get(obj.Branch__c)))){
+                price = mapTotalPric.get(obj.Branch__c);
+            }
+
+            price += Integer.valueOf(obj.MinPrice__c);
+
+            mapTotalPric.put(obj.Branch__c, price);
+
         }
 
         List<Branch__c> ListBranch = [
@@ -128,7 +184,8 @@ public with sharing class AladinHomePageComponentController {
 
         for(Branch__c B : ListBranch){
 
-            StringPrice = MapBranch.get(B.Id);
+            StringPrice = String.valueOf(mapTotalPric.get(B.Id));
+
             try{
                 FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();
                 FormattedPrice = FormattingPrice.substring(0,FormattingPrice.length())+'원';

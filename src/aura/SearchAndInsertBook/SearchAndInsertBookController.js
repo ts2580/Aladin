@@ -59,6 +59,12 @@
         component.set('v.isBookInsertModalOpen', false);
     },
 
+    fnGoAla: function(component, event, helper){
+        let link = event.getSource().get('v.value');
+
+        window.open(link);
+    },
+
     fnSetAndCloseModal: function(component, event, helper){
         let result = event.getParam('arguments');
         let objBook = result.paramBook;
@@ -87,4 +93,6 @@
     fnSearchBookExt: function(component, event, helper){
         helper.searchBookExt(component, event, helper);
     },
+
+
 });

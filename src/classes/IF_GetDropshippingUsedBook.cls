@@ -67,37 +67,15 @@ global with sharing class IF_GetDropshippingUsedBook {
         public Integer minPrice;                    // 광활한 우주점(매장 배송) 중고의 보유 상품중 최저가 상품 판매가격
     }
 
+    global static List<BranchBookExt__x> getBookListInfo(List<BookByVolume__x> listBooks, Integer StartNum, Integer ENDNum){
 
-    @Future(Callout = true)
-    global static void getBookListInfo(Integer StartNum, Integer ENDNum){
-
-        List<BookByVolume__x> listBooks = new List<BookByVolume__x>();
         InterfaceLog__c IFL = new InterfaceLog__c();
-
-        // 헤로쿠단 에러 체크
-        try {
-            listBooks = [
-                    SELECT ISBN13__c, Name__c, Volume__c, Seq__c, Type__c, Book__c
-                    FROM BookByVolume__x
-                    WHERE IsPurchased__c = FALSE
-                    AND NoNeedToBuy__c = FALSE
-                    AND Seq__c >=: StartNum
-                    AND Seq__c <: ENDNum
-            ];
-        }catch (Exception e){
-            IFL.StartNum__c = StartNum;
-            IFL.ENDNum__c = ENDNum;
-            IFL.Name = ' Seq ' + StartNum + ' ~ ' + ENDNum +'사이 중고책 정보 헤로쿠에서 받아오기 에러 발생';
-            IFL.Log__c = e.getMessage();
-
-            insert IFL;
-        }
+        List<BranchBookExt__x> listBranchBookExt = new List<BranchBookExt__x>();
 
         // Aladin Open Api단 에러 체크
         if(!listBooks.isEmpty()){
-
             try {
-                getStock(listBooks);
+                listBranchBookExt = getStockToExt(listBooks);
             } catch (Exception e) {
                 IFL.StartNum__c = StartNum;
                 IFL.ENDNum__c = ENDNum;
@@ -107,9 +85,96 @@ global with sharing class IF_GetDropshippingUsedBook {
                 insert IFL;
             }
         }
+
+        return listBranchBookExt;
     }
 
-    private static Output getStock(List<BookByVolume__x> listBooks){
+    public static List<BranchBookExt__x> getStockToExt(List<BookByVolume__x> listBooks){
+
+        Output output = new Output();
+        Item item = new Item();
+        SubInfo subInfo = new SubInfo();
+        UsedList usedList = new UsedList();
+        AladinUsed aladinUsed = new AladinUsed();
+        SpaceUsed spaceUsed = new SpaceUsed();
+
+        IF_Util IFU = new IF_Util();
+
+        List<BranchBookExt__x> ListBranchBook = new List<BranchBookExt__x>();
+        List<InterfaceLog__c> listIFL = new List<InterfaceLog__c>();
+        Map<String, Id> BranchMap = IFU.getBranch();
+        Map<String, String> ParamMap = new Map<String, String>();
+
+        BranchBookExt__x BranchBook;
+        for(BookByVolume__x BBV : listBooks){
+
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint(IFU.getDropshippingUsedBookURL(BBV.ISBN13__c));
+            request.setMethod('GET');
+            HttpResponse response = http.send(request);
+
+            if (response.getStatusCode() == 200) {
+
+                output = (Output) JSON.deserialize(response.getBody(), Output.class);
+
+                item = output.item[0];
+                subInfo = item.subInfo;
+                usedList = subInfo.usedList;
+                aladinUsed = usedList.aladinUsed;
+
+                Integer IsDropShipping = aladinUsed.itemCount;
+                Integer minPrice = aladinUsed.minPrice;
+
+                if(IsDropShipping != 0 && String.isNotBlank(String.valueOf(IsDropShipping))){
+                    BBV.Volume__c = (BBV.Volume__c == null) ? 1 : BBV.Volume__c;
+
+                    BranchBook = new BranchBookExt__x();
+                    BranchBook.Name__c = BBV.Name__c;
+                    BranchBook.Book__c = BBV.Book__c;
+                    BranchBook.Branch__c = BranchMap.get('알라딘 직배송');
+                    BranchBook.BranchName__c = '알라딘 직배송';
+                    BranchBook.Volume__c = BBV.Volume__c;
+                    BranchBook.BookLink__c = aladinUsed.link.replace('amp;','');
+                    BranchBook.MinPrice__c = String.valueOf(minPrice);
+                    ListBranchBook.add(BranchBook);
+                }
+
+                spaceUsed = usedList.spaceUsed;
+
+                Integer IsThereSpaceUsed = spaceUsed.itemCount;
+                Integer spaceMinPrice = spaceUsed.minPrice;
+
+                if(IsThereSpaceUsed != 0 && String.isNotBlank(String.valueOf(IsThereSpaceUsed))){
+                    ParamMap.put('BookName', BBV.Name__c);
+                    ParamMap.put('ISBN13', BBV.ISBN13__c);
+                    ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
+                    ParamMap.put('MasterBook', BBV.Book__c);
+                    ParamMap.put('Volume', String.valueOf(BBV.Volume__c));
+
+                    try{
+                        List<BranchBookExt__x> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfo(BranchMap, ParamMap);
+
+                        for(BranchBookExt__x SBB : spaceBranchBook){
+                            ListBranchBook.add(SBB);
+                        }
+                    }catch(Exception e){
+                        InterfaceLog__c IFL = new InterfaceLog__c();
+                        IFL.StartNum__c = BBV.Seq__c;
+                        IFL.ENDNum__c = BBV.Seq__c + 1;
+                        IFL.Name = '"' + BBV.Name__c + '"' + '재고 정보 가져오기 실패';
+                        IFL.Log__c = e.getMessage();
+                        listIFL.add(IFL);
+                    }
+                }
+            }
+        }
+        insert listIFL;
+
+        return ListBranchBook;
+    }
+
+    public static void getStock(List<BookByVolume__x> listBooks){
 
         Output output = new Output();
         Item item = new Item();
@@ -173,7 +238,94 @@ global with sharing class IF_GetDropshippingUsedBook {
                     ParamMap.put('Volume', String.valueOf(BBV.Volume__c));
 
                     try{
-                        List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfo(BranchMap, ParamMap);
+                        List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfoBU(BranchMap, ParamMap);
+
+                        for(BranchBook__c SBB : spaceBranchBook){
+                            ListBranchBook.add(SBB);
+                        }
+                    }catch(Exception e){
+                        InterfaceLog__c IFL = new InterfaceLog__c();
+                        IFL.StartNum__c = BBV.Seq__c;
+                        IFL.ENDNum__c = BBV.Seq__c + 1;
+                        IFL.Name = '"' + BBV.Name__c + '"' + '재고 정보 가져오기 실패';
+                        IFL.Log__c = e.getMessage();
+                        listIFL.add(IFL);
+                    }
+                }
+            }
+        }
+
+        System.debug(JSON.serialize(ListBranchBook));
+    }
+
+    @Future(Callout=true)
+    public static void getStockAsync(String strBookX){
+
+        // json 받아서 파씽하고 비동기로 바꾸기
+        List<BookByVolume__x> listBooks = (List<BookByVolume__x>) JSON.deserialize(strBookX, List<BookByVolume__x>.class);
+
+        Output output = new Output();
+        Item item = new Item();
+        SubInfo subInfo = new SubInfo();
+        UsedList usedList = new UsedList();
+        AladinUsed aladinUsed = new AladinUsed();
+        SpaceUsed spaceUsed = new SpaceUsed();
+
+        IF_Util IFU = new IF_Util();
+
+        List<BranchBook__c> ListBranchBook = new List<BranchBook__c>();
+        List<InterfaceLog__c> listIFL = new List<InterfaceLog__c>();
+        Map<String, Id> BranchMap = IFU.getBranch();
+        Map<String, String> ParamMap = new Map<String, String>();
+
+        for(BookByVolume__x BBV : listBooks){
+
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint(IFU.getDropshippingUsedBookURL(BBV.ISBN13__c));
+            request.setMethod('GET');
+            HttpResponse response = http.send(request);
+
+            if (response.getStatusCode() == 200) {
+
+                output = (Output) JSON.deserialize(response.getBody(), Output.class);
+
+                item = output.item[0];
+                subInfo = item.subInfo;
+                usedList = subInfo.usedList;
+                aladinUsed = usedList.aladinUsed;
+
+                Integer IsDropShipping = aladinUsed.itemCount;
+                Integer minPrice = aladinUsed.minPrice;
+
+                if(IsDropShipping != 0 && String.isNotBlank(String.valueOf(IsDropShipping))){
+                    BBV.Volume__c = (BBV.Volume__c == null) ? 1 : BBV.Volume__c;
+
+                    BranchBook__c BranchBook = new BranchBook__c();
+                    BranchBook.Name = BBV.Name__c;
+                    BranchBook.Branch__c = BranchMap.get('알라딘 직배송');
+                    BranchBook.BranchName__c = '알라딘 직배송';
+                    BranchBook.Book__c = BBV.Book__c;
+                    BranchBook.Volume__c = BBV.Volume__c;
+                    BranchBook.BookLink__c = aladinUsed.link.replace('amp;','');
+                    BranchBook.MinPrice__c = String.valueOf(minPrice);
+                    ListBranchBook.add(BranchBook);
+                }
+
+                spaceUsed = usedList.spaceUsed;
+
+                Integer IsThereSpaceUsed = spaceUsed.itemCount;
+                Integer spaceMinPrice = spaceUsed.minPrice;
+
+                if(IsThereSpaceUsed != 0 && String.isNotBlank(String.valueOf(IsThereSpaceUsed))){
+                    ParamMap.put('BookName', BBV.Name__c);
+                    ParamMap.put('ISBN13', BBV.ISBN13__c);
+                    ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
+                    ParamMap.put('MasterBook', BBV.Book__c);
+                    ParamMap.put('Volume', String.valueOf(BBV.Volume__c));
+
+                    try{
+                        List<BranchBook__c> spaceBranchBook = IF_GetUsedBookInfo.getUsedBookInfoBU(BranchMap, ParamMap);
 
                         for(BranchBook__c SBB : spaceBranchBook){
                             ListBranchBook.add(SBB);
@@ -192,46 +344,50 @@ global with sharing class IF_GetDropshippingUsedBook {
 
         insert ListBranchBook;
         insert listIFL;
-
-
-        return null;
     }
 
-    public static void getInfo(){
+
+    public static void Run(Integer StartNum){
+
+        Integer endNum = StartNum + 50;
+
+        List<BookByVolume__x> listBooks = [
+                SELECT Id, ISBN13__c, ISBN__c, Id__c, Link__c, PubDate__c, Author__c
+                FROM BookByVolume__x
+                WHERE Id__c >=: StartNum
+                AND Id__c <: endNum
+        ];
+
+    }
+
+    public static void getInfo(List<BookByVolume__x> listBooks){
 
         Output output = new Output();
         Item item = new Item();
         IF_Util IFU = new IF_Util();
 
-        List<BookByVolume__x> listBooks = [
-                SELECT Id, ISBN13__c, description__c, ISBN__c, Book__c, Id__c, Link__c, Pubdate__c, Author__c
-                FROM BookByVolume__x
-                WHERE Id__c = 1
-        ];
+        if(listBooks.size() > 0){
+            for(BookByVolume__x BBV : listBooks){
 
-        for(BookByVolume__x BBV : listBooks){
+                Http http = new Http();
+                HttpRequest request = new HttpRequest();
+                request.setEndpoint(IFU.getDropshippingUsedBookURL(BBV.ISBN13__c));
+                request.setMethod('GET');
+                request.setTimeout(20000);
+                HttpResponse response = http.send(request);
 
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint(IFU.getDropshippingUsedBookURL(BBV.ISBN13__c));
-            request.setMethod('GET');
-            HttpResponse response = http.send(request);
+                if (response.getStatusCode() == 200) {
 
-            if (response.getStatusCode() == 200) {
+                    output = (Output) JSON.deserialize(response.getBody(), Output.class);
 
-                output = (Output) JSON.deserialize(response.getBody(), Output.class);
-
-                item = output.item[0];
-                BBV.description__c = item.description;          // 설명
-                BBV.Link__c = item.link;                        // 새 책 구매 링크
-                BBV.PubDate__c = Date.valueOf(item.pubDate);    // 출간일
-                BBV.Author__c = item.author;                    // 작가
+                    item = output.item[0];
+                    BBV.Description__c = item.description.abbreviate(1000);             // 설명
+                    BBV.Link__c = item.link;                                            // 새 책 구매 링크
+                    BBV.PubDate__c = Date.valueOf(item.pubDate);                        // 출간일
+                    BBV.Author__c = item.author;                                        // 작가
+                }
             }
+            Database.updateAsync(listBooks);
         }
-
-
-        Database.updateAsync(listBooks);
-
     }
-
 }

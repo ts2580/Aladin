@@ -7,6 +7,8 @@
         component.set('v.isSpinnerOpen', true);
         let searchWord = event.getSource().get('v.value').trim();
 
+        console.dir(searchWord);
+
         if(searchWord){
             let action = component.get('c.getBooks');
 

@@ -13,7 +13,10 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="410836d8-1523-48f7-86b3-390f0c93c06e">
-      <console name="알라딘" type="STANDARD" schema="d67ivivnl469s5" session="Main" />
+      <console name="알라딘" type="STANDARD" schema="d67ivivnl469s5" session="Main"><![CDATA[select count(*)
+from devext.bookbyvolume bbv
+where bbv.description is not null
+;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -21,6 +24,9 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
+  </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
@@ -509,5 +515,8 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
   </component>
 </project>

@@ -31,14 +31,16 @@
 
         if(!String.isBlank(title) && title.length() != 18){
             listBook = [
-                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c
+                    SELECT Id__c, Name__c, Volume__c, Price__c, Link__c,
+                            IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c, Description__c
                     FROM BookByVolume__x
                     WHERE Name__c LIKE: searchWord
                     ORDER BY Book__c, Volume__c DESC
             ];
         }else if(!String.isBlank(title) && title.length() == 18){
             listBook = [
-                    SELECT Id__c, Name__c, Volume__c, Price__c, IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c
+                    SELECT Id__c, Name__c, Volume__c, Price__c, Link__c,
+                            IsPurchased__c, Cover__c, Seq__c, Book__c, Type__c, Description__c
                     FROM BookByVolume__x
                     WHERE Book__c =: title
                     ORDER BY Book__c, Volume__c DESC
@@ -64,6 +66,21 @@
     public static BookByVolume__x insertBookExt(BookByVolume__x paramBook){
 
         try{
+            Book__c b = [
+                    SELECT Id, Type__c, TotalVolume__c
+                    FROM Book__c
+                    WHERE Id =: paramBook.Book__c
+            ];
+
+            paramBook.Type__c = b.Type__c;
+
+            if(String.isBlank(String.valueOf(paramBook.Volume__c))){
+                paramBook.Volume__c = Integer.valueOf(b.TotalVolume__c) + 1;
+            }
+
+            b.TotalVolume__c = String.valueOf(Integer.valueOf(b.TotalVolume__c) + 1);
+
+            update b;
             Database.insertAsync(paramBook);
         }catch (Exception e){
             System.debug(e.getMessage());
@@ -86,12 +103,12 @@
      public static List<BookByVolume__x> getLatestBook(){
 
          List<BookByVolume__x> ListBooks = [
-                 SELECT Id, ISBN13__c, Name__c, Price__c, Cover__c, Volume__c, Book__c, Type__c
+                 SELECT Id, ISBN13__c, Name__c, Price__c, Cover__c, Volume__c, Book__c, Type__c, Description__c, Link__c
                  FROM BookByVolume__x
                  WHERE IsPurchased__c = FALSE
                  AND NoNeedToBuy__c = FALSE
                  ORDER BY Id DESC
-                 LIMIT 50
+                 LIMIT 100
          ];
 
          return ListBooks;

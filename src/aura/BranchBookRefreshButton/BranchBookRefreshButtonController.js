@@ -41,8 +41,16 @@
         helper.setBranchBook_1(component, event, helper);
     },
 
+    fnGetBookExt : function(component, event, helper) {
+        helper.getBookExt(component, event, helper);
+    },
+
     fnDoManualIf : function(component, event, helper) {
         helper.doManualIf(component, event, helper);
+    },
+
+    fnInsertBranchBook : function(component, event, helper) {
+        helper.insertBranchBook(component, event, helper);
     },
 
 	rerun : function(component, event, helper) {

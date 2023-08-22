@@ -1,3 +1,13 @@
 /**
  * Created by 한성진 on 2022-11-24.
  */
+
+ .btn_next button {
+     background-color : transparent;
+     border : none;
+     border-radius : 0px;
+     color : #006DCC;
+     text-align : left;
+     padding : 0px;
+     box-shadow: none;
+ }

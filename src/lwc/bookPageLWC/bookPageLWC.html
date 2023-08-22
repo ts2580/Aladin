@@ -20,7 +20,9 @@
                     data={books.data}
                     columns={bookColumns}
                     onsave={handleSave}
-                    draft-values={draftValues}>
+                    draft-values={draftValues}
+                    onrowaction={viewRecord}
+            >
             </c-salesforce-codex-data-table>
         </div>
 

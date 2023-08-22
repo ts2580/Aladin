@@ -58,6 +58,11 @@ public with sharing class IF_GetBookInfo {
                         BookByVolume.Book__c = LB.Id;
                         BookByVolume.Type__c = LB.Type__c;
                         BookByVolume.Volume__c = Integer.valueOf(TotalVolume);
+                        // BookByVolume.Description__c = (String) BookMap.get('description');          // 설명
+                        BookByVolume.Link__c = (String) BookMap.get('link');                        // 새 책 구매 링크
+                        BookByVolume.PubDate__c = Date.valueOf((String) BookMap.get('pubDate'));    // 출간일
+                        BookByVolume.Author__c = (String) BookMap.get('author');                    // 작가
+
                         TotalVolume--;
 
                         ListBookByVolume.add(BookByVolume);
