@@ -15,6 +15,10 @@
         fnCloseModal.fnCloseBookModal();
     },
 
+    fnSetBook: function(component, event, helper){
+        helper.setBook(component, event, helper);
+    },
+
     fnInsertBook: function(component, event, helper){
         component.set('v.isInsertAndNew', false);
         helper.insertBook(component, event, helper);

@@ -32,32 +32,34 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
-    public static void refreshBook_1(){
+    public static void refreshBook_1(Integer seq, List<BookByVolume__x> listBooks){
 
-        List<BranchBook__c> BranchBook= [
-                SELECT Id
+        List<BranchBook__c> bbv = [
+                SELECT Id, Name
                 FROM BranchBook__c
         ];
-        delete BranchBook;
 
-        List<BookByVolume__x> listBooks = [
-                SELECT ISBN13__c, Name__c, Volume__c, Seq__c, Type__c, Book__c
-                FROM BookByVolume__x
-                WHERE IsPurchased__c = FALSE
-                AND NoNeedToBuy__c = FALSE
-        ];
+        delete bbv;
 
         List<BookByVolume__x> listSplitedBook = new List<BookByVolume__x>();
+
+        // External Object에다가 곧바로 쓰면 Odata 리밋땜에 잠김
+        // Heroku Connect를 통해 Internal Object에 쌓고, PG 트리거로 Ext 테이블에 쌓아줌
+        // 그리고 Int 테이블 데이터는 지움(양방향 설정)
+        // 한꺼번에 Int 테이블에 쌓으면 sfdc 용량도 부족하고(5MB!), 한 테이블에 Insert와 Del이 빡세게 일어나는것 같아서 끊어서 침
 
         // 비동기 메소드는 sObject 안받아. 프리미티브 타입으로 보내야함. 비동기로 쏘는 도중 데이터가 바뀌는것(무결성?) 방지
         // 따라서 Id만 set으로 보내서 다시 쿼리 하라고 하는데, 그러면 헤로쿠에서 하꺼번에 쿼리해서 가져오는 의미가 없지.
         // 바로 제이슨으로 씨리얼라이즈 해서 보내고, sObject로 디씨리얼라이즈 해서 받는다.
         for(Integer i = 0; i < listBooks.size(); i++){
-            listSplitedBook.add(listBooks[i]);
 
-            if(Math.mod(i,30) == 0){
-                IF_GetDropshippingUsedBook.getStockAsync(JSON.serialize(listSplitedBook));
-                listSplitedBook.clear();
+            if(i >= seq*600 && i < (seq+1)*600){
+                listSplitedBook.add(listBooks[i]);
+
+                if(Math.mod(i,30) == 0){
+                    IF_GetDropshippingUsedBook.getStockAsync(JSON.serialize(listSplitedBook));
+                    listSplitedBook.clear();
+                }
             }
         }
     }

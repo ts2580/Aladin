@@ -40,6 +40,32 @@
         $A.enqueueAction(action);
     },
 
+    setBook: function(component, event, helper){
+
+        let title = event.getSource().get('v.value');
+
+        let action = component.get('c.setBook');
+
+        action.setParam("title", title);
+
+        action.setCallback(this, function(response){
+
+            let state = response.getState();
+
+            if(state === "SUCCESS"){
+                this.setToast(component, "success", "해당하는 책을 세팅하였습니다.");
+
+                let searchedBook = response.getReturnValue();
+                component.set('v.bookExt.Book__c', searchedBook);
+
+            }else{
+                this.setToast(component, "error", "해당하는 책이 없습니다.");
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+
     insertBookExt: function(component, event, helper){
 
         let objBook = component.get('v.bookExt');

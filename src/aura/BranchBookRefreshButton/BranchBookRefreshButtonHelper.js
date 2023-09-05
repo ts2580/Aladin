@@ -3,12 +3,23 @@
 
         component.set('v.isSpinnerOpen', true);
 
+        // 재고 검색 대상 권수
+        let bookExt = component.get("v.BookExt");
+
+        let startNum = component.get("v.startNum");
+
         let action = component.get("c.refreshBook_1");
+
+        action.setParams({
+            'seq': startNum,
+            'listBooks': bookExt,
+        });
 
         action.setCallback(this, function(response){
             let state = response.getState();
             if(state === "SUCCESS" && component.isValid()){
-                this.setToast(component, "success", "지점별 재고 정보를 갱신하였습니다.");
+                this.setToast(component, "success", (startNum + 1)+ "회차 지점별 재고 정보를 갱신하였습니다.");
+                component.set('v.startNum', startNum + 1);
             }
             component.set('v.isSpinnerOpen', false);
         });

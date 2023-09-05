@@ -3,7 +3,8 @@
  */
 
 trigger Book on Book__c (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
-    if (TriggerSetting__mdt.getInstance('TriggerSetting')?.TriggerAllActive__c && TriggerSetting__mdt.getInstance('TriggerSetting')?.CommCodeActive__c) {
+    if (TriggerSetting__mdt.getInstance('TriggerSetting')?.TriggerAllActive__c
+            && TriggerSetting__mdt.getInstance('TriggerSetting')?.BookActive__c) {
         new tr_Book().run();
     }
 }

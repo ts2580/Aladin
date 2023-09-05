@@ -25,7 +25,11 @@ public with sharing class tr_Book extends TriggerHandler{
     //-----------------------------------------------------------------------------------------------------------
     public static void setKey(List<Book__c> listNew){
 
-        Book__c lastBook = [SELECT S_OriginalKey__c FROM Book__c ORDER BY CreatedDate DESC LIMIT 1];
+        Book__c lastBook = [
+                SELECT S_OriginalKey__c
+                FROM Book__c
+                ORDER BY CreatedDate DESC LIMIT 1
+        ];
 
         Integer keyNum = Integer.valueOf(lastBook.S_OriginalKey__c.remove('B'));
 

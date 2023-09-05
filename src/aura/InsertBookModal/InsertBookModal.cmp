@@ -93,12 +93,33 @@
                         <lightning:recordEditForm objectApiName="BookByVolume__x" density="compact">
                             <div class="slds-grid slds-gutters" style="width:40vw">
                                 <div class="slds-col slds-size_1-of-2">
-                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Book__c}" fieldName="Book__c"/>
-                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Name__c}" fieldName="Name__c"/>
+                                    <lightning:input
+                                            label="임시 이름"
+                                            oncommit="{!c.fnSetBook}"
+                                            variant="label-inline"
+                                    />
+                                    <lightning:inputField
+                                            aura:id="bookField"
+                                            value="{!v.bookExt.Book__c}"
+                                            fieldName="Book__c"
+                                    />
+                                    <lightning:inputField
+                                            aura:id="bookField"
+                                            value="{!v.bookExt.Name__c}"
+                                            fieldName="Name__c"
+                                    />
                                 </div>
                                 <div class="slds-col slds-size_1-of-2 slds-size_large">
-                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.Volume__c}" fieldName="Volume__c"/>
-                                    <lightning:inputField aura:id="bookField" value="{!v.bookExt.IsPurchased__c}" fieldName="IsPurchased__c"/>
+                                    <lightning:inputField
+                                            aura:id="bookField"
+                                            value="{!v.bookExt.Volume__c}"
+                                            fieldName="Volume__c"
+                                    />
+                                    <lightning:inputField
+                                            aura:id="bookField"
+                                            value="{!v.bookExt.IsPurchased__c}"
+                                            fieldName="IsPurchased__c"
+                                    />
                                 </div>
                             </div>
                         </lightning:recordEditForm>

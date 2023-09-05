@@ -62,6 +62,19 @@
         return paramBook;
     }
 
+     @AuraEnabled
+     public static String setBook(String title){
+
+         String query =
+                 'SELECT Id, Name ' +
+                 'FROM Book__c ' +
+                 'WHERE Name LIKE ' + '\'' + title.substring(0, title.length()-4) +'%\'';
+
+         List<Book__c> listBook = Database.query(query);
+
+         return listBook[0].Id;
+     }
+
     @AuraEnabled
     public static BookByVolume__x insertBookExt(BookByVolume__x paramBook){
 
