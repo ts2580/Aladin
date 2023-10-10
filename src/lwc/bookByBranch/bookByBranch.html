@@ -1,30 +1,28 @@
 <!--
- - Created by 한성진 on 2022-11-24.
+ - Created by 한성진 on 2023-09-26.
  -->
 
-<!-- Book Page Lwc -->
+<!-- Book By Branch -->
 <template>
     <div class="slds-theme_shade slds-border_top slds-border_right slds-border_left slds-border_bottom">
 
         <div class="slds-m-around_medium">
-            <lightning-card icon-name="standard:knowledge" title="권별">
+            <lightning-card icon-name="standard:knowledge" title="지점별 책 재고">
             </lightning-card>
             <p class="slds-truncate">
-                Sorted by 권(숫자)
+                Sorted by 제목
             </p>
         </div>
 
         <div class="slds-border_top">
-            <c-salesforce-codex-data-table
+            <lightning-datatable
                     key-field="Id"
-                    data={books.data}
+                    data={books}
                     columns={bookColumns}
-                    onsave={handleSave}
-                    draft-values={draftValues}
-                    onrowaction={viewRecord}
             >
-            </c-salesforce-codex-data-table>
+            </lightning-datatable>
         </div>
+
     </div>
 
 </template>

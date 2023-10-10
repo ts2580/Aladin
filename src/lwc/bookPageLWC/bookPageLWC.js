@@ -3,7 +3,7 @@
  */
 
 import {LightningElement, wire, api} from 'lwc';
-import getBook from '@salesforce/apex/AladinHomePageComponentController.getBook';
+import getBook from '@salesforce/apex/LwcController.getBook';
 // Apex method와 Wire
 
 import {refreshApex} from '@salesforce/apex';
@@ -22,9 +22,24 @@ const bookColumns =  [
              class : 'btn_next'
          }
      },
-    {label: '구매여부', fieldName: 'IsPurchased__c', type: 'boolean', editable: true},
-    {label: '가격', fieldName: 'Price__c', type: 'text', editable: true},
-    {label: '권', fieldName: 'Volume__c', type: 'Number', editable: true},
+    {
+        label: '구매여부',
+        fieldName: 'IsPurchased__c',
+        type: 'boolean',
+        editable: true
+    },
+    {
+        label: '가격',
+        fieldName: 'Price__c',
+        type: 'text',
+        editable: true
+    },
+    {
+        label: '권',
+        fieldName: 'Volume__c',
+        type: 'Number',
+        editable: true
+    },
     {
         label: '표지',
         fieldName: 'Cover__c',

@@ -18,19 +18,6 @@ public with sharing class AladinHomePageComponentController {
         return listBranch;
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static List<BookByVolume__x> getBook(Id recordId){
-
-        List<BookByVolume__x> listBookByVolume = [
-                SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c, Book__c, Type__c, Description__c
-                FROM BookByVolume__x
-                WHERE Book__c =: recordId
-                ORDER BY Volume__c
-        ];
-
-        return listBookByVolume;
-    }
-
     @AuraEnabled
     public static void refreshBook_1(Integer seq, List<BookByVolume__x> listBooks){
 
