@@ -3,6 +3,8 @@
  */
 
 import {LightningElement, wire, api} from 'lwc';
+import customStyles from '@salesforce/resourceUrl/customCS';
+import {loadStyle} from 'lightning/platformResourceLoader';
 import getBook from '@salesforce/apex/LwcController.getBook';
 // Apex method와 Wire
 
@@ -13,36 +15,36 @@ import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 const bookColumns =  [
     {
          label: '제목',
-         fieldName: 'Name__c',
-         type: 'button',
+         fieldName: 'bookUrl',
+         type: 'url',
          typeAttributes: {
              label: {
-                 fieldName: 'Name__c'
+                 fieldName: 'title'
              },
              class : 'btn_next'
          }
      },
     {
         label: '구매여부',
-        fieldName: 'IsPurchased__c',
+        fieldName: 'isPurchased',
         type: 'boolean',
         editable: true
     },
     {
         label: '가격',
-        fieldName: 'Price__c',
+        fieldName: 'price',
         type: 'text',
         editable: true
     },
     {
         label: '권',
-        fieldName: 'Volume__c',
+        fieldName: 'volume',
         type: 'Number',
         editable: true
     },
     {
         label: '표지',
-        fieldName: 'Cover__c',
+        fieldName: 'bookCoverUrl',
         type: 'image',
         editable: true
     },
@@ -61,6 +63,14 @@ export default class BookPageLwc extends LightningElement {
 
     async handleSave(event) {
         // 데이타 테이블의 값을 Object로 변환
+
+        // 기존의 sObject로 보낼 때에는 별다른 변환이 필요 없었지만,
+        // 현재는 Wrapper로 보내므로, 적절한 API명 변환이 필요함. 변환 후 Wrapper key는 삭제
+        event.detail.draftValues.forEach(function(item, idx){
+            event.detail.draftValues[idx]['IsPurchased__c'] = event.detail.draftValues[idx]['isPurchased'];
+            delete event.detail.draftValues[idx]['isPurchased'];
+        })
+
         const records = event.detail.draftValues.slice().map((draftValue) => {
             const fields = Object.assign({}, draftValue);
             return { fields };

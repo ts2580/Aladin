@@ -94,6 +94,10 @@
             b.TotalVolume__c = String.valueOf(Integer.valueOf(b.TotalVolume__c) + 1);
 
             update b;
+
+            System.debug('진입');
+            System.debug(b);
+
             Database.insertAsync(paramBook);
         }catch (Exception e){
             System.debug(e.getMessage());

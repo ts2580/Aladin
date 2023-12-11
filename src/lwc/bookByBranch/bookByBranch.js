@@ -9,37 +9,48 @@ import getBranchBook from '@salesforce/apex/LwcController.getBranchBook';
 
 const bookColumns =  [
     {
-         label: '제목',
-         fieldName: 'title',
-         type: 'text'
+             label: '구매링크',
+             fieldName: 'link',
+             type: 'url',
+             typeAttributes: {
+                 label: {
+                     fieldName: 'title'
+                 },
+                 class : 'btn_next'
+             }
     },
+    /*{
+         label: '제목',
+         fieldName: 'bookByUrl',
+         type: 'url',
+         typeAttributes: {
+             label: {
+                 fieldName: 'title'
+             },
+             class : 'btn_next'
+         }
+    },*/
     {
         label: '권',
         fieldName: 'volume',
-        type: 'Number'
+        type: 'text'
     },
     {
          label: '책',
          fieldName: 'bookUrl',
-         type: 'button',
+         type: 'url',
          typeAttributes: {
              label: {
                  fieldName: 'bookName'
              },
-             class : 'btn_next',
-             onclick: {fnClick}
+             class : 'btn_next'
          }
     },
     {
         label: '가격',
         fieldName: 'price',
         type: 'text'
-    },
-    {
-        label: '구매링크',
-        fieldName: 'link',
-        type: 'url'
-    },
+    }
 ];
 
 export default class BookByBranch extends LightningElement {
@@ -71,10 +82,5 @@ export default class BookByBranch extends LightningElement {
             this.error = error;
         }
     };
-
-    fnClick(event) {
-        console.dir('앙뇽앙뇽');
-    };
-
 
 }

@@ -84,7 +84,10 @@ public with sharing class IF_Util {
 
         Map<String, Id> BranchNameIdMap = new Map<String, Id>();
 
-        List<Branch__c> ListBranch = [SELECT Id, Name FROM Branch__c];
+        List<Branch__c> ListBranch = [
+                SELECT Id, Name
+                FROM Branch__c
+        ];
 
         for(Branch__c B : ListBranch){
             BranchNameIdMap.put(B.Name, B.Id);

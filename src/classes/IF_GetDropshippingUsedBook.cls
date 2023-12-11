@@ -183,7 +183,6 @@ global with sharing class IF_GetDropshippingUsedBook {
         AladinUsed aladinUsed = new AladinUsed();
         SpaceUsed spaceUsed = new SpaceUsed();
 
-
         IF_Util IFU = new IF_Util();
 
         List<BranchBook__c> ListBranchBook = new List<BranchBook__c>();
@@ -385,6 +384,10 @@ global with sharing class IF_GetDropshippingUsedBook {
                     BBV.Link__c = item.link;                                            // 새 책 구매 링크
                     BBV.PubDate__c = Date.valueOf(item.pubDate);                        // 출간일
                     BBV.Author__c = item.author;                                        // 작가
+
+                    System.debug(response.getBody());
+
+                    System.debug(item.description);
                 }
             }
             Database.updateAsync(listBooks);

@@ -29,7 +29,7 @@ public with sharing class IF_GetUsedBookInfo {
                 BranchBook = new BranchBookExt__x();
                 BranchBook.Name__c = ParamMap.get('BookName');
                 BranchBook.Branch__c = BranchMap.get((String) BranchDetail.get('offName'));
-                BranchBook.BranchName__c = (String) BranchDetail.get('offName');
+                BranchBook.BranchName__c = (String) BranchDetail.get('BookId');
                 BranchBook.Book__c = ParamMap.get('MasterBook');
                 BranchBook.Volume__c = Integer.valueOf(ParamMap.get('Volume'));
                 
@@ -69,7 +69,7 @@ public with sharing class IF_GetUsedBookInfo {
                 BranchBook__c BranchBook = new BranchBook__c();
                 BranchBook.Name = ParamMap.get('BookName');
                 BranchBook.Branch__c = BranchMap.get((String) BranchDetail.get('offName'));
-                BranchBook.BranchName__c = (String) BranchDetail.get('offName');
+                BranchBook.BranchName__c = (String) BranchDetail.get('BookId');
                 BranchBook.Book__c = ParamMap.get('MasterBook');
                 BranchBook.Volume__c = Integer.valueOf(ParamMap.get('Volume'));
 

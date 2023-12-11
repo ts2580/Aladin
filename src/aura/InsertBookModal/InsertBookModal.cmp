@@ -93,20 +93,17 @@
                         <lightning:recordEditForm objectApiName="BookByVolume__x" density="compact">
                             <div class="slds-grid slds-gutters" style="width:40vw">
                                 <div class="slds-col slds-size_1-of-2">
-                                    <lightning:input
-                                            label="임시 이름"
-                                            oncommit="{!c.fnSetBook}"
-                                            variant="label-inline"
-                                    />
                                     <lightning:inputField
                                             aura:id="bookField"
                                             value="{!v.bookExt.Book__c}"
                                             fieldName="Book__c"
                                     />
-                                    <lightning:inputField
+                                    <lightning:input
                                             aura:id="bookField"
                                             value="{!v.bookExt.Name__c}"
-                                            fieldName="Name__c"
+                                            oncommit="{!c.fnSetBook}"
+                                            label="제목"
+                                            variant="label-inline"
                                     />
                                 </div>
                                 <div class="slds-col slds-size_1-of-2 slds-size_large">

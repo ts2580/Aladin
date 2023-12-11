@@ -50,7 +50,7 @@ public with sharing class IF_InsertLatestBook {
 
                     BBV.Cover__c = NormalCover.replace('cover','cover500');
                     BBV.Volume__c = BBV.Volume__c != null ? BBV.Volume__c : 0;
-                    BBV.Description__c = (String) BookMap.get('description');          // 설명
+                    BBV.Description__c = String.valueOf(BookMap.get('description')).abbreviate(1000);          // 설명
                     BBV.Link__c = (String) BookMap.get('link');                        // 새 책 구매 링크
                     BBV.PubDate__c = Date.valueOf((String) BookMap.get('pubDate'));    // 출간일
                     BBV.Author__c = (String) BookMap.get('author');                    // 작가

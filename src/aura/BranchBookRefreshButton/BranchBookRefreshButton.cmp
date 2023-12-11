@@ -42,6 +42,7 @@
             <div class="slds-col slds-size_6-of-12">
                 <div class="slds-float_right">
                     <lightning:buttonGroup>
+                        <lightning:button label="대상 책 가져오기" onclick="{!c.fnGetBookExt}"></lightning:button>
                         <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBooks_1}"/>
                         <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
                         <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
@@ -51,45 +52,4 @@
         </div>
     </div>
 
-    <div class="slds-box_x-small slds-theme_shade slds-clearfix slds-border_top slds-border_right slds-border_left slds-border_bottom slds-m-top_medium">
-        <div class="slds-grid slds-gutters">
-            <div class="slds-col slds-size_3-of-12">
-                <div class="slds-float_left">
-                    <lightning:card iconName="standard:knowledge" title="지점별 재고수동 갱신" class="slds-theme_shade">
-                    </lightning:card>
-                </div>
-            </div>
-            <div class="slds-col slds-size_9-of-12">
-                <div class="slds-float_right">
-                    <div class="slds-grid slds-gutters">
-                        <div class="slds-col slds-size_3-of-12">
-                            <lightning:button label="대상 책 가져오기" onclick="{!c.fnGetBookExt}"></lightning:button>
-                        </div>
-                        <div class="slds-col slds-size_3-of-12">
-                            <lightning:input
-                                    label="시작 Seq"
-                                    variant="label-hidden"
-                                    value="{!v.startNum}"
-                                    class="slds-align_absolute-center"
-                            >
-                            </lightning:input>
-                        </div>
-                        <div class="slds-col slds-size_3-of-12">
-                            <lightning:input
-                                    label="종료 Seq"
-                                    variant="label-hidden"
-                                    value="{!v.endNum}"
-                                    class="slds-align_absolute-center"
-                            >
-                            </lightning:input>
-                        </div>
-                        <div class="slds-col slds-size_3-of-12">
-                            <lightning:button label="시작" onclick="{!c.fnDoManualIf}"></lightning:button>
-                            <lightning:button label="삽입" onclick="{!c.fnInsertBranchBook}"></lightning:button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </aura:component>
