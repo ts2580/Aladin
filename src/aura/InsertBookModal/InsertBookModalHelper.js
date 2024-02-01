@@ -52,13 +52,21 @@
 
             let state = response.getState();
 
+            let legX = /[^0-9]/g;
+            let lastNum = title.replace(legX, "").substr(-1);
+            let lastNumIdx = title.indexOf(lastNum);
+            let volume = title.substring(lastNumIdx - 1, lastNumIdx + 1);
+
             if(state === "SUCCESS"){
                 this.setToast(component, "success", "해당하는 책을 세팅하였습니다.");
 
                 let searchedBook = response.getReturnValue();
+
                 component.set('v.bookExt.Book__c', searchedBook);
+                component.set('v.bookExt.Volume__c', volume);
 
             }else{
+                component.set('v.bookExt.Volume__c', volume);
                 this.setToast(component, "error", "해당하는 책이 없습니다.");
             }
         });

@@ -44,6 +44,7 @@
                     <lightning:buttonGroup>
                         <lightning:button label="대상 책 가져오기" onclick="{!c.fnGetBookExt}"></lightning:button>
                         <lightning:button label="지점별 재고 새로고침" onclick="{!c.refreshBooks_1}"/>
+                        <lightning:button label="재고 삭제" onclick="{!c.fnDelBook}"/>
                         <lightning:button label="실패한 인터페이스 재실행" onclick="{!c.rerun}"/>
                         <lightning:button label="지점별 총액 새로고침" onclick="{!c.refreshPrices}"/>
                     </lightning:buttonGroup>

@@ -59,6 +59,24 @@
 
     },
 
+    delBook : function(component, event, helper) {
+        component.set('v.isSpinnerOpen', true);
+
+        let action = component.get("c.delBook");
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+            if(state === "SUCCESS" && component.isValid()){
+                this.setToast(component, "success", "재고삭제 성공.");
+            }else{
+                this.setToast(component, "error", "재고삭제 실패.");
+            }
+            component.set('v.isSpinnerOpen', false);
+        });
+
+        $A.enqueueAction(action);
+    },
+
     doManualIf : function(component, event, helper) {
 
         // 재고 검색 대상 권수

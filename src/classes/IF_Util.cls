@@ -96,4 +96,11 @@ public with sharing class IF_Util {
         return BranchNameIdMap;
     }
 
+    public String proxyConUrl(String oper) {
+
+        String BASE_URL = 'http://www.hsj-nas.kr:3927/' + oper;
+
+        return BASE_URL;
+    }
+
 }

@@ -34,6 +34,7 @@ public with sharing class tr_Book extends TriggerHandler{
         Integer keyNum = Integer.valueOf(lastBook.S_OriginalKey__c.remove('B'));
 
         for(Book__c book : listNew){
+            book.TotalVolume__c = '0';
 
             if(keyNum >= 1000){
                 book.S_OriginalKey__c = 'B' + String.valueOf(keyNum + 1);

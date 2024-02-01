@@ -65,6 +65,20 @@ public with sharing class AladinHomePageComponentController {
     }
 
     @AuraEnabled
+    public static void delBook(){
+
+        List<BranchBook__c> bb = [
+                SELECT Name
+                FROM BranchBook__c
+
+        ];
+
+        System.debug(bb.size());
+
+        delete bb;
+    }
+
+    @AuraEnabled
     public static List<BranchBookExt__x> refreshBookManual(List<BookByVolume__x> listBooks, Integer strNum, Integer endNum, Boolean isFirstTry){
 
         Boolean param = isFirstTry;
@@ -144,7 +158,7 @@ public with sharing class AladinHomePageComponentController {
         String FormattingPrice = null;
         String FormattedPrice = null;
 
-        List<BranchBookExt__x> listBranchBook = [
+       /* List<BranchBookExt__x> listBranchBook = [
                 SELECT Branch__c, MinPrice__c
                 FROM BranchBookExt__x
         ];
@@ -164,7 +178,7 @@ public with sharing class AladinHomePageComponentController {
 
             mapTotalPric.put(obj.Branch__c, price);
 
-        }
+        }*/
 
         List<Branch__c> ListBranch = [
                 SELECT Id, Name, TotalPrice__c, TotalPriceInt__c
@@ -173,7 +187,9 @@ public with sharing class AladinHomePageComponentController {
 
         for(Branch__c B : ListBranch){
 
-            StringPrice = String.valueOf(mapTotalPric.get(B.Id));
+            //StringPrice = String.valueOf(mapTotalPric.get(B.Id));
+
+            StringPrice = String.valueOf(B.TotalPriceInt__c);
 
             try{
                 FormattingPrice = (Decimal.valueOf(StringPrice.trim()==''?'0':StringPrice).setScale(2)).format();

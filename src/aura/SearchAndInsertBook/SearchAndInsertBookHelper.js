@@ -120,11 +120,11 @@
 
         component.set('v.isSpinnerOpen', true);
 
-        let title = event.getSource().get('v.value').trim();
+        let objBook = event.getSource().get('v.value');
         let action = component.get('c.getBookExtInfo');
 
         action.setParams({
-            'title': title
+            'objBook': objBook
         });
 
         action.setCallback(this, function(response){

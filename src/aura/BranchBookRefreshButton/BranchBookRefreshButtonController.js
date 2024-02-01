@@ -41,6 +41,10 @@
         helper.setBranchBook_1(component, event, helper);
     },
 
+    fnDelBook : function(component, event, helper) {
+        helper.delBook(component, event, helper);
+    },
+
     fnGetBookExt : function(component, event, helper) {
         helper.getBookExt(component, event, helper);
     },

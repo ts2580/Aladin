@@ -351,7 +351,7 @@ global with sharing class IF_GetDropshippingUsedBook {
         Integer endNum = StartNum + 50;
 
         List<BookByVolume__x> listBooks = [
-                SELECT Id, ISBN13__c, ISBN__c, Id__c, Link__c, PubDate__c, Author__c
+                SELECT Id, ISBN13__c, ISBN__c, Id__c, Link__c, Author__c
                 FROM BookByVolume__x
                 WHERE Id__c >=: StartNum
                 AND Id__c <: endNum
@@ -382,7 +382,7 @@ global with sharing class IF_GetDropshippingUsedBook {
                     item = output.item[0];
                     BBV.Description__c = item.description.abbreviate(1000);             // 설명
                     BBV.Link__c = item.link;                                            // 새 책 구매 링크
-                    BBV.PubDate__c = Date.valueOf(item.pubDate);                        // 출간일
+                    BBV.PubDate__c = Datetime.valueOf(item.pubDate);                        // 출간일
                     BBV.Author__c = item.author;                                        // 작가
 
                     System.debug(response.getBody());

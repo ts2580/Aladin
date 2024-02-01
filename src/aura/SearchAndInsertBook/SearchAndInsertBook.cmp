@@ -155,7 +155,7 @@
                             <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
                                               label="&ensp;&ensp;IF&ensp;&ensp;"
                                               variant="success"
-                                              value="{!objBook.Name__c}"
+                                              value="{!objBook}"
                                               onclick="{!c.fnDoIfExt}"
                             />
                             <lightning:button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
