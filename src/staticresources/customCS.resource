@@ -1,0 +1,14 @@
+/**
+ * Created by 한성진 on 2023-09-27.
+ */
+
+
+  .btn_next  button {
+      background-color : transparent;
+      border : none;
+      border-radius : 0px;
+      color : #006DCC;
+      text-align : left;
+      padding : 0px;
+      box-shadow: none;
+  }

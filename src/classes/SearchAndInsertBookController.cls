@@ -29,20 +29,22 @@ public with sharing class SearchAndInsertBookController {
                 objBook.Cover__c = obj.cover;
                 objBook.ISBN13__c = obj.isbn13;
                 objBook.Price__c = obj.price;
-                objBook.IsPurchased__c = obj.isPurchased;
+                objBook.IsPurchased__c = obj.ispurchased;
                 objBook.Name__c = obj.name;
                 objBook.Type__c = obj.type;
                 objBook.Volume__c = obj.volume;
-                objBook.NoNeedToBuy__c = obj.noneedToBuy;
+                objBook.NoNeedToBuy__c = obj.noneedtobuy;
                 objBook.Id__c = obj.id;
                 objBook.ISBN__c = obj.isbn;
                 objBook.Description__c = obj.description;
                 objBook.Link__c = obj.link;
-                objBook.PubDate__c = Datetime.valueOf(obj.pubDate);
+                objBook.PubDate__c = Datetime.valueOf(obj.pubdate);
                 objBook.Author__c = obj.author;
                 listBook.add(objBook);
             }
         }
+
+        System.debug(JSON.serialize(listBook));
 
         return listBook;
     }
@@ -119,19 +121,29 @@ public with sharing class SearchAndInsertBookController {
         IF_Util ifu = new IF_Util();
         String url = ifu.proxyConUrl('library/bookbyvolumes');
 
-        System.debug(JSON.serialize(listBook));
-
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
         request.setMethod('POST');
+        request.setHeader('Content-Type', 'application/json');
         request.setBody(JSON.serialize(listBook));
         HttpResponse response = http.send(request);
 
         if(response.getStatusCode() == 200) {
-            BookDTO.BookByVolume obj = (BookDTO.BookByVolume) JSON.deserialize(response.getBody(), BookDTO.BookByVolume.class);
-            update b;
-            paramBook.Id__c = obj.id;
+
+            url = ifu.proxyConUrl('library/bookbyvolume/info?title=') + EncodingUtil.urlEncode(objBook.name, 'UTF-8');
+
+            http = new Http();
+            request = new HttpRequest();
+            request.setEndpoint(url);
+            request.setMethod('GET');
+            response = http.send(request);
+
+            if(response.getStatusCode() == 200) {
+                List<BookDTO.BookByVolume> listBBV = (List<BookDTO.BookByVolume>) JSON.deserialize(response.getBody(), List<BookDTO.BookByVolume>.class);
+                update b;
+                paramBook.Id__c = listBBV[0].id;
+            }
         }
 
         return paramBook;
@@ -203,7 +215,6 @@ public with sharing class SearchAndInsertBookController {
         IF_Util ifu = new IF_Util();
         String url = ifu.proxyConUrl('library/bookbyvolume/basic');
 
-        // todo 애는 위에서 넣은거 업데이트!
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
@@ -335,6 +346,55 @@ public with sharing class SearchAndInsertBookController {
     @AuraEnabled
     public static List<Book__c> getBookInfo(String title){
         return IF_GetBookInfo.getBookInfo(title);
+    }
+
+    @AuraEnabled
+    public static String setBookExt(BookByVolume__x objBook){
+
+        String returnParam = null;
+
+        List<BookDTO.BookByVolume> listBooks = new List<BookDTO.BookByVolume>();
+
+        BookDTO.BookByVolume paramBook = new BookDTO.BookByVolume();
+        paramBook.seq = Integer.valueOf(objBook.Id__c);
+        paramBook.book = objBook.Book__c;
+        paramBook.cover = objBook.Cover__c;
+        paramBook.isbn13 = objBook.ISBN13__c;
+        paramBook.price = objBook.Price__c;
+        paramBook.ispurchased = objBook.IsPurchased__c;
+        paramBook.name = objBook.Name__c;
+        paramBook.type = objBook.Type__c;
+        paramBook.volume = Integer.valueOf(objBook.Volume__c);
+        paramBook.noneedtobuy = objBook.NoNeedToBuy__c;
+        paramBook.id = Integer.valueOf(objBook.Id__c);
+        paramBook.isbn = objBook.ISBN__c;
+        paramBook.description = objBook.Description__c;
+        paramBook.link = objBook.Link__c;
+        paramBook.pubdate = objBook.PubDate__c;
+        paramBook.author = objBook.Author__c;
+        listBooks.add(paramBook);
+
+        String param = JSON.serialize(listBooks, true);
+
+        System.debug(param);
+
+        IF_Util ifu = new IF_Util();
+        String url = ifu.proxyConUrl('library/bookbyvolumes');
+
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(url);
+        request.setMethod('PUT');
+        request.setHeader('Content-Type', 'application/json');
+        request.setBody(param);
+        HttpResponse response = http.send(request);
+
+        if(response.getStatusCode() == 200) {
+            System.debug(response.getBody());
+            returnParam = '성공';
+        }
+
+        return returnParam;
     }
 
 

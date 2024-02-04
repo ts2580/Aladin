@@ -54,7 +54,7 @@ public with sharing class IF_InsertLatestBook {
                 objBook.volume = objBook.volume != null ? objBook.volume : 0;
                 objBook.description = String.valueOf(BookMap.get('description')).abbreviate(1000);      // 설명
                 objBook.link = (String) BookMap.get('link');                                            // 새 책 구매 링크
-                objBook.pubDate = Date.valueOf((String) BookMap.get('pubDate'));                        // 출간일
+                objBook.pubdate = Date.valueOf((String) BookMap.get('pubDate'));                        // 출간일
                 objBook.author = (String) BookMap.get('author');                                        // 작가
             }
         }

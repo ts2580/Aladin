@@ -16,7 +16,7 @@ public with sharing class sc_AladinBatch_2 implements Schedulable, Database.Allo
         for(InterfaceLog__c IFG : InterfaceLog){
             startNum = IFG.StartNum__c;
             endNum = IFG.ENDNum__c;
-            IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
+            // IF_GetDropshippingUsedBook.getBookListInfo(startNum.intValue(),endNum.intValue());
             IFG.IsRerun__c = true;
         }
 

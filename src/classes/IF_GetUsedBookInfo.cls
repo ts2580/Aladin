@@ -45,11 +45,12 @@ public with sharing class IF_GetUsedBookInfo {
         return ListBranchBook;
     }
 
-    public static List<BranchBook__c> getUsedBookInfoBU(Map<String, Id> BranchMap, Map<String, String> ParamMap) {
+    public static List<BookDTO.Branchbook> getUsedBookInfoBU(Map<String, Id> BranchMap, Map<String, String> ParamMap) {
 
         IF_Util IF_Util = new IF_Util();
 
-        List<BranchBook__c> ListBranchBook = new List<BranchBook__c>();
+        List<BookDTO.Branchbook> listBranchBook = new List<BookDTO.Branchbook>();
+        BookDTO.Branchbook objBranchBook;
         List<Object> Books = new List<Object>();
 
         Http http = new Http();
@@ -66,23 +67,23 @@ public with sharing class IF_GetUsedBookInfo {
             for(Object objectBook : Books){
 
                 Map<String, Object> BranchDetail = (Map<String, Object>) objectBook;
-                BranchBook__c BranchBook = new BranchBook__c();
-                BranchBook.Name = ParamMap.get('BookName');
-                BranchBook.Branch__c = BranchMap.get((String) BranchDetail.get('offName'));
-                BranchBook.BranchName__c = (String) BranchDetail.get('BookId');
-                BranchBook.Book__c = ParamMap.get('MasterBook');
-                BranchBook.Volume__c = Integer.valueOf(ParamMap.get('Volume'));
+                objBranchBook = new BookDTO.Branchbook();
+                objBranchBook.name = ParamMap.get('BookName');
+                objBranchBook.branch = BranchMap.get((String) BranchDetail.get('offName'));
+                objBranchBook.branchName = (String) BranchDetail.get('offName');
+                objBranchBook.book = ParamMap.get('MasterBook');
+                objBranchBook.volume = Integer.valueOf(ParamMap.get('Volume'));
 
                 String link = (String) BranchDetail.get('link');
-                BranchBook.BookLink__c = link.replace('amp;','');
+                objBranchBook.bookLink = link.replace('amp;','');
 
-                BranchBook.MinPrice__c = ParamMap.get('MinPrice');
-                ListBranchBook.add(BranchBook);
+                objBranchBook.minPrice = ParamMap.get('MinPrice');
+                listBranchBook.add(objBranchBook);
             }
 
         }
 
-        return ListBranchBook;
+        return listBranchBook;
     }
 
 }

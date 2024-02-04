@@ -94,5 +94,8 @@
         helper.searchBookExt(component, event, helper);
     },
 
+    fnSetBook: function(component, event, helper){
+        helper.setBook(component, event, helper);
+    },
 
 });

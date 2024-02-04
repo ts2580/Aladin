@@ -65,6 +65,37 @@
 
     },
 
+    setBook: function(component, event, helper){
+
+        let objBook = event.getSource().get('v.value');
+
+        let action = component.get('c.setBookExt');
+
+        action.setParams({
+            'objBook': objBook
+        });
+
+        console.dir(objBook);
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+
+            if(state === 'SUCCESS'){
+                let responseBook = action.getReturnValue();
+
+                if(!responseBook){
+                    this.setToast(component, "Warning", objBook['Name__c'] + " 업데이트 실패.");
+                }else{
+                    this.setToast(component, "success", objBook['Name__c'] + " 업데이트 성공.");
+                }
+                component.set('v.isSpinnerOpen', false);
+            }
+        })
+        $A.enqueueAction(action);
+
+
+    },
+
     doIf: function(component, event, helper){
 
         component.set('v.isSpinnerOpen', true);

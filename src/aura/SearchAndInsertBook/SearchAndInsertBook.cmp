@@ -142,7 +142,14 @@
                         </div>
                         <div class="slds-col slds-size_3-of-12">
                             <lightning:inputField value="{!objBook.Price__c}"       fieldName="Price__c"/>
-                            <lightning:inputField value="{!objBook.IsPurchased__c}" fieldName="IsPurchased__c" />
+                            <div>
+                                <lightning:input
+                                        checked="{!objBook.IsPurchased__c}"
+                                        type="checkbox"
+                                        variant="label-inline"
+                                        label="구입여부"
+                                />
+                            </div>
                             <lightning:inputField value="{!objBook.Cover__c}"       fieldName="Cover__c"/>
                             <lightning:inputField value="{!objBook.Book__c}"        fieldName="Book__c"/>
                         </div>
@@ -171,7 +178,9 @@
                                               onclick="{!c.fnDeleteBook}"
                             />
                             <lightning:button class="submitBtnExt"
-                                              type="submit"
+                                              onclick="{!c.fnSetBook}"
+                                              value="{!objBook}"
+                                              name="{!idx}"
                                               label="&nbsp;&nbsp;save&nbsp;&nbsp;"
                                               variant="brand"
                             />

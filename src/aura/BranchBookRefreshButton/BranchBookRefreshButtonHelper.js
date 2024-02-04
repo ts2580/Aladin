@@ -1,33 +1,4 @@
 ({
-    setBranchBook_1 : function(component, event, helper){
-
-        component.set('v.isSpinnerOpen', true);
-
-        // 재고 검색 대상 권수
-        let bookExt = component.get("v.BookExt");
-
-        let startNum = component.get("v.startNum");
-
-        let action = component.get("c.refreshBook_1");
-
-        action.setParams({
-            'seq': startNum,
-            'listBooks': bookExt,
-        });
-
-        action.setCallback(this, function(response){
-            let state = response.getState();
-            if(state === "SUCCESS" && component.isValid()){
-                this.setToast(component, "success", (startNum + 1)+ "회차 지점별 재고 정보를 갱신하였습니다.");
-                component.set('v.startNum', startNum + 1);
-            }
-            component.set('v.isSpinnerOpen', false);
-        });
-
-        $A.enqueueAction(action);
-
-    },
-
     getBookExt : function(component, event, helper){
 
         component.set('v.isSpinnerOpen', true);
@@ -59,6 +30,35 @@
 
     },
 
+    refreshBooks : function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
+
+        // 재고 검색 대상 권수
+        let bookExt = component.get("v.BookExt");
+
+        let startNum = component.get("v.startNum");
+
+        let action = component.get("c.refreshBook");
+
+        action.setParams({
+            'seq': startNum,
+            'listBooks': bookExt,
+        });
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+            if(state === "SUCCESS" && component.isValid()){
+                this.setToast(component, "success", (startNum + 1)+ "회차 지점별 재고 정보를 갱신하였습니다.");
+                component.set('v.startNum', startNum + 1);
+            }
+            component.set('v.isSpinnerOpen', false);
+        });
+
+        $A.enqueueAction(action);
+
+    },
+
     delBook : function(component, event, helper) {
         component.set('v.isSpinnerOpen', true);
 
@@ -74,6 +74,22 @@
             component.set('v.isSpinnerOpen', false);
         });
 
+        $A.enqueueAction(action);
+    },
+
+    refreshPrices : function(component, event, helper){
+
+        component.set('v.isSpinnerOpen', true);
+
+        let action = component.get("c.refreshPrice");
+
+        action.setCallback(this, function(response){
+            let state = response.getState();
+            if(state === "SUCCESS" && component.isValid()){
+                this.setToast(component, "success", "지점별 재고 총액 정보를 갱신하였습니다.");
+            }
+            component.set('v.isSpinnerOpen', false);
+        });
         $A.enqueueAction(action);
     },
 
@@ -208,21 +224,6 @@
         $A.enqueueAction(action);
     },
 
-    setTotalBranchBookPrice : function(component, event, helper){
-
-        component.set('v.isSpinnerOpen', true);
-
-        let action = component.get("c.refreshPrice");
-
-        action.setCallback(this, function(response){
-            let state = response.getState();
-            if(state === "SUCCESS" && component.isValid()){
-                this.setToast(component, "success", "지점별 재고 총액 정보를 갱신하였습니다.");
-            }
-            component.set('v.isSpinnerOpen', false);
-        });
-        $A.enqueueAction(action);
-    },
 
     setToast: function (component, variant, message) {
         component.find('notificationLib').showToast({
