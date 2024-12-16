@@ -1,0 +1,279 @@
+<!--************************************************************************************
+ * File Name   : fieldDeployPipeline.html
+ * Author      : 한성진
+ * Date        : 2024.09.03
+ * Class       :
+ * Target      :
+ * Description : 필드를 편하게 배포해보자
+ * Modification Log
+ * ===================================================================================
+ * Ver      Date            Author              Modification
+ * ===================================================================================
+   1.0      2024.09.03      한성진               Create
+   2.0      2024.08.21      한성진               팝업창 제거하고 곧바로 엑셀 붙여넣기
+   2.1      2024.10.31      한성진               삽입/업데이트/실패 색분할
+   2.2      2024.11.11      한성진               서버와 클라이언트 N번 통신하도록 수정
+   2.3      2024.11.12      한성진               페이징, 익명블록 만드는 코드들 삭제
+<*************************************************************************************-->
+
+<template>
+    <div class="slds-m-left_medium slds-m-right_medium" style="height:37rem">
+        <div class="slds-grid slds-gutters slds-m-top_medium slds-m-bottom_large" style="height:35rem">
+            <div class="slds-col slds-size_3-of-12 slds-box_border" style="background-color:white">
+
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_4-of-12">
+                        <div class="slds-m-top_large">오브젝트 API명 검색</div>
+                    </div>
+                    <div class="slds-col slds-size_8-of-12">
+                        <lightning-input
+                                label='오브젝트 API명'
+                                variant="label-hidden"
+                                onchange={fnSetObj}
+                                class="slds-m-top_medium"
+                                placeholder="Account"
+                        ></lightning-input>
+                    </div>
+                </div>
+
+                <div class="slds-scrollable_y" style="height: 30rem">
+                    <template for:each={autoComplete} for:item="obj" for:index="idx">
+                        <lightning-button key={obj.Id} label={obj} value={obj} onclick={setCode}></lightning-button>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-box_border slds-col slds-size_9-of-12 slds-m-left_xx-small" style="background-color:white">
+                <div style="height: 32rem" class="slds-scrollable_y">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_4-of-12">
+                            <div class="slds-m-top_large">선택된 오브젝트 : {targetObj}</div>
+                        </div>
+                        <div class="slds-col slds-size_8-of-12">
+                            <lightning-button class="slds-m-top_small slds-m-bottom_small slds-float_right"
+                                              variant="brand"
+                                              label="삽입"
+                                              onclick= {fnSave}
+                            ></lightning-button>
+                            <lightning-button class="slds-m-top_small slds-m-bottom_small slds-float_right slds-m-right_small"
+                                              label="엑셀다운"
+                                              onclick={fnExportExcel}>
+                            </lightning-button>
+                            <lightning-button class="slds-m-top_small slds-m-bottom_small slds-float_right slds-m-right_small"
+                                              label="제거"
+                                              variant="destructive-text"
+                                              onclick={fnDeleteRow}>
+                            </lightning-button>
+                            <lightning-button class="slds-m-top_small slds-m-bottom_small slds-float_right slds-m-right_small"
+                                              variant="brand"
+                                              label="추가"
+                                              onclick={fnAddRow}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                    <lightning-record-edit-form object-api-name="temp_fields_distribution_by_Prod__c">
+                        <table id="data-table">
+                            <thead>
+                            <tr>
+                                <th>전체
+                                    <input
+                                            type="checkbox"
+                                            data-index={idx}
+                                            onclick={fnSetCheckAll}
+                                    />
+                                </th>
+                                <th>오브젝트이름</th>
+                                <th>필드타입</th>
+                                <th>라벨</th>
+                                <th>API명</th>
+                                <th>설명</th>
+                                <th>(텍스트 필드)길이</th>
+                                <th>(숫자 필드)길이</th>
+                                <th>소숫점자리</th>
+                                <th>보여질 라인</th>
+                                <th>수식</th>
+                                <th>픽리스트Json</th>
+                                <th>Lookup 참조개체</th>
+                                <th>Lookup Child 관계</th>
+                                <th>결과</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template for:each={mainArray} for:item="fields" for:index="idx">
+                                <tr key={fields.Id}>
+                                    <td>
+                                        <lightning-input
+                                                type="checkbox"
+                                                data-key="Check"
+                                                data-type="CheckBox"
+                                                data-index={idx}
+                                                value={fields.Check}
+                                                onclick={fnSetCheck}
+                                        ></lightning-input>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="targetObj"
+                                                data-index={idx}
+                                                value={fields.targetObj}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="type"
+                                                data-index={idx}
+                                                value={fields.type}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="label"
+                                                data-index={idx}
+                                                value={fields.label}
+                                                onchange={fnSetData}
+                                                onpaste={handlePaste}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="name"
+                                                data-index={idx}
+                                                value={fields.name}
+                                                onchange={fnSetData}
+                                                onpaste={handlePaste}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="description"
+                                                data-index={idx}
+                                                value={fields.description}
+                                                onchange={fnSetData}
+                                                onpaste={handlePaste}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                data-key="length"
+                                                data-index={idx}
+                                                value={fields.length}
+                                                onchange={fnSetData}
+                                                onpaste={handlePaste}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                data-key="precision"
+                                                data-index={idx}
+                                                value={fields.precision}
+                                                onchange={fnSetData}
+                                                onpaste={handlePaste}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                data-key="scale"
+                                                data-index={idx}
+                                                value={fields.scale}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                data-key="visibleLines"
+                                                data-index={idx}
+                                                value={fields.visibleLines}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="calculatedFormula"
+                                                data-index={idx}
+                                                value={fields.calculatedFormula}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="picklistString"
+                                                data-index={idx}
+                                                value={fields.picklistString}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="referenceString"
+                                                data-index={idx}
+                                                value={fields.referenceString}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                data-key="relationshipName"
+                                                data-index={idx}
+                                                value={fields.relationshipName}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                    <td style="width: 22rem">
+                                        <input
+                                                type="text"
+                                                data-key="result"
+                                                data-index={idx}
+                                                data-value={fields.result}
+                                                data-value2={fields.result2}
+                                                value={fields.result}
+                                                onpaste={handlePaste}
+                                                onchange={fnSetData}
+                                        />
+                                    </td>
+                                </tr>
+                            </template>
+
+                            <!-- 추가 데이터 행을 여기에 추가 -->
+                            </tbody>
+                        </table>
+                    </lightning-record-edit-form>
+                </div>
+            </div>
+        </div>
+        <!--스피너-->
+        <div role="status"
+             class="slds-spinner slds-spinner_large slds-spinner_brand"
+             style="z-index:9005"
+             if:true={isSpinnerOpen}
+        >
+            <span class="slds-assistive-text">Loading...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+        <c-cm_-excel-export >
+
+        </c-cm_-excel-export>
+    </div>
+</template>

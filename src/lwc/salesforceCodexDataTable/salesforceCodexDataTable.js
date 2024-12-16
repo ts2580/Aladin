@@ -3,12 +3,19 @@
  */
 
 import LightningDatatable from 'lightning/datatable';
-import imageTableControl from './imageTableControl.html';
+import imageTableControl from './template/imageTableControl.html';
+import richTextContainer from './template/richTextContainer.html';
 
 export default class SalesforceCodexDataTable extends LightningDatatable  {
     static customTypes = {
         image: {
-            template: imageTableControl
+            template: imageTableControl,
+            standardCellLayout:false
+        },
+        richText: {
+            template: richTextContainer,
+            standardCellLayout:true,
+            typeAttributes: ["status"],
         }
     };
 }

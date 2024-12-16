@@ -103,4 +103,16 @@ public with sharing class IF_Util {
         return BASE_URL;
     }
 
+    public String getMyIp(){
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://api.ipify.org');
+        request.setMethod('GET');
+        HttpResponse response = http.send(request);
+        String responseBody = response.getBody();
+        System.debug(responseBody);
+
+        return responseBody;
+    }
+
 }

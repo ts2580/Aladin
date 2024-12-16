@@ -1,0 +1,29 @@
+.closeIcon {
+    --sds-c-icon-color-foreground-default: white;
+    cursor                               : pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    background-color: lightgray;
+    text-align: left;
+}
+
+td {
+    height: 1rem;
+}
+
+td input {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    padding: 8px;
+}

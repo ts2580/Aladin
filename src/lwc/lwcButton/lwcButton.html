@@ -1,0 +1,17 @@
+<!--
+ - Created by trsty on 24. 9. 24..
+ -->
+
+<!-- Lwc Button -->
+<template>
+
+
+    <lightning-modal-header label="My Modal Heading"></lightning-modal-header>
+    <lightning-modal-body>
+        <lightning-input label="이름" value={userNm}></lightning-input>
+        <lightning-record-picker object-api-name="Account" label="계정" value={accountId}></lightning-record-picker>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+    </lightning-modal-footer>
+</template>

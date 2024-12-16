@@ -1,0 +1,37 @@
+<!--
+ - Created by trsty on 24. 6. 5..
+ -->
+
+<!-- Book Table -->
+<template>
+    <c-salesforce-codex-data-table
+        show-row-number-column="true"
+        key-field="Id"
+        data={tableData}
+        columns={columns}
+        max-row-selection=1
+        onrowselection={fnSelectBook}
+    >
+    </c-salesforce-codex-data-table>
+
+    <div class="slds-float_right slds-size_1-of-1">
+        <template if:true={totalRecordsCount}>
+            <c-pagination
+                    totalrecords={totalRecordsCount}
+                    page-size={pageSize}
+                    onpagination={fnHandlePagination}>
+            </c-pagination>
+        </template>
+    </div>
+
+    <!--스피너-->
+    <div if:true={isSpinnerOpen}
+         role="status"
+         class="slds-spinner slds-spinner_medium slds-spinner_brand"
+         style="z-index:9005"
+    >
+        <span class="slds-assistive-text">Loading...</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+    </div>
+</template>

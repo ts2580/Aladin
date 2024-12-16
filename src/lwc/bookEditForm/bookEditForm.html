@@ -1,0 +1,42 @@
+<!--
+ - Created by trsty on 24. 6. 5..
+ -->
+
+<!-- Book Edit Form -->
+<template>
+    <lightning-record-edit-form
+            object-api-name="Book__c"
+            record-id={recordId}
+    >
+        <p class="slds-m-left_xx-small slds-m-bottom_small" style="font-size: 1rem; font-weight: 600;">
+            디테일
+        </p>
+
+        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field field-name="CreatedDate"></lightning-input-field>
+                <lightning-input-field field-name="CreatedById"></lightning-input-field>
+                <lightning-input-field field-name="Description__c"></lightning-input-field>
+                <lightning-input
+                        label="기분"
+                        type="text"
+                        value={recordData.feeling}
+                        variant="label-inline">
+                </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field field-name="LastModifiedDate"></lightning-input-field>
+                <lightning-input-field field-name="Order__c"></lightning-input-field>
+                <lightning-input-field field-name="Id"></lightning-input-field>
+                <lightning-input
+                        label="구입여부"
+                        type="checkbox"
+                        checked= {recordData.isPurchased}
+                        variant="label-inline">
+                </lightning-input>
+            </div>
+        </div>
+
+    </lightning-record-edit-form>
+</template>

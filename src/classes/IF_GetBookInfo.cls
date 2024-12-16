@@ -54,7 +54,7 @@ public with sharing class IF_GetBookInfo {
 
                         String NormalCover = (String) BookMap.get('cover');
 
-                        BookByVolume.Cover__c = NormalCover.replace('cover','cover500');
+                        BookByVolume.Cover__c = NormalCover.replace('cover200','cover500');
                         BookByVolume.Book__c = LB.Id;
                         BookByVolume.Type__c = LB.Type__c;
                         BookByVolume.Volume__c = Integer.valueOf(TotalVolume);

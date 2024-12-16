@@ -1,0 +1,7 @@
+<!--
+ - Created by trsty on 24. 11. 13..
+ -->
+
+<apex:page contentType="text/plain">
+    <apex:outputText >{!$Api.Session_ID}</apex:outputText>
+</apex:page>

@@ -40,7 +40,9 @@ public with sharing class LwcController {
 
         List<BookByVolume> listBBV = new List<BookByVolume>();
 
-        List<BookByVolume__x> listBookByVolume = [
+        List<BookByVolume__x> listBookByVolume = new List<BookByVolume__x>();
+
+        listBookByVolume = [
                 SELECT Name__c, IsPurchased__c, Id, Cover__c, Price__c, Volume__c, Book__c, Type__c, Description__c
                 FROM BookByVolume__x
                 WHERE Book__c =: recordId

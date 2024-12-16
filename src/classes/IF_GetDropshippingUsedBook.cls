@@ -89,13 +89,23 @@ global with sharing class IF_GetDropshippingUsedBook {
         Map<String, Id> BranchMap = IFU.getBranch();
         Map<String, String> ParamMap = new Map<String, String>();
 
+        Integer IsDropShipping;
+        Integer minPrice;
+        Integer IsThereSpaceUsed;
+        Integer spaceMinPrice;
+
         for(BookByVolume__x BBV : listBooks){
+
+            IsDropShipping = 0;
+            IsThereSpaceUsed = 0;
 
             Http http = new Http();
             HttpRequest request = new HttpRequest();
             request.setEndpoint(IFU.getDropshippingUsedBookURL(BBV.ISBN13__c));
             request.setMethod('GET');
             HttpResponse response = http.send(request);
+
+            System.debug(response.getBody());
 
             if (response.getStatusCode() == 200) {
 
@@ -106,10 +116,15 @@ global with sharing class IF_GetDropshippingUsedBook {
                 usedList = subInfo.usedList;
                 aladinUsed = usedList.aladinUsed;
 
-                Integer IsDropShipping = aladinUsed.itemCount;
-                Integer minPrice = aladinUsed.minPrice;
+                IsDropShipping = aladinUsed.itemCount;
+                minPrice = aladinUsed.minPrice;
 
                 if(IsDropShipping != 0 && String.isNotBlank(String.valueOf(IsDropShipping))){
+
+                    System.debug('직배송 재고 존재');
+                    System.debug('직배송 재고 :' + BBV.Name__c);
+                    System.debug('직배송 재고 량: '  + IsDropShipping);
+
                     BBV.Volume__c = (BBV.Volume__c == null) ? 1 : BBV.Volume__c;
 
                     objBranchBook = new BookDTO.Branchbook();
@@ -125,10 +140,15 @@ global with sharing class IF_GetDropshippingUsedBook {
 
                 spaceUsed = usedList.spaceUsed;
 
-                Integer IsThereSpaceUsed = spaceUsed.itemCount;
-                Integer spaceMinPrice = spaceUsed.minPrice;
+                IsThereSpaceUsed = spaceUsed.itemCount;
+                spaceMinPrice = spaceUsed.minPrice;
 
                 if(IsThereSpaceUsed != 0 && String.isNotBlank(String.valueOf(IsThereSpaceUsed))){
+
+                    System.debug('지점 재고 존재');
+                    System.debug('지점 재고 :' + BBV.Name__c);
+                    System.debug('지점 재고 : '  + IsThereSpaceUsed);
+
                     ParamMap.put('BookName', BBV.Name__c);
                     ParamMap.put('ISBN13', BBV.ISBN13__c);
                     ParamMap.put('MinPrice', String.valueOf(spaceMinPrice));
@@ -153,7 +173,7 @@ global with sharing class IF_GetDropshippingUsedBook {
 
         System.debug(JSON.serialize(listBranchBook));
 
-        String url = ifu.proxyConUrl('library/branchBook');
+        String url = IFU.proxyConUrl('library/branchBook');
 
         Http http = new Http();
         HttpRequest request = new HttpRequest();

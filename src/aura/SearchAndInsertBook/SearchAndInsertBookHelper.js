@@ -23,8 +23,10 @@
                     let responseBooks = action.getReturnValue();
 
                     if(responseBooks.length == 0){
-                        this.setToast(component, "Warning", "검색 결과가 없습니다.");
+                        this.setToast(component, "error", "해당 제목의 책이 존재하지 않습니다.");
                     }else{
+                        this.setToast(component, "success", "책 정보를 불러왔습니다.");
+
                         component.set('v.listBook', responseBooks);
                     }
                     component.set('v.isSpinnerOpen', false);
@@ -37,7 +39,7 @@
 
     searchBookExt: function(component, event, helper){
         component.set('v.isSpinnerOpen', true);
-        let searchWord = event.getSource().get('v.value').trim();
+        let searchWord = event.target.value.trim();
 
         if(searchWord){
             let action = component.get('c.getBookExt');
@@ -52,7 +54,7 @@
                 if(state === 'SUCCESS'){
                     let responseBooks = action.getReturnValue();
 
-                    if(responseBooks.length == 0){
+                    if(responseBooks.length === 0){
                         this.setToast(component, "Warning", "검색 결과가 없습니다.");
                     }else{
                         component.set('v.listBookExt', responseBooks);

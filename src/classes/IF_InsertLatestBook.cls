@@ -50,7 +50,7 @@ public with sharing class IF_InsertLatestBook {
 
                 String NormalCover = (String) BookMap.get('cover');
 
-                objBook.cover = NormalCover.replace('cover','cover500');
+                objBook.cover = NormalCover.replace('cover200','cover500');
                 objBook.volume = objBook.volume != null ? objBook.volume : 0;
                 objBook.description = String.valueOf(BookMap.get('description')).abbreviate(1000);      // 설명
                 objBook.link = (String) BookMap.get('link');                                            // 새 책 구매 링크

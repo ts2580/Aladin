@@ -1,0 +1,19 @@
+<apex:page id="VF_insertAccount" standardController="Account" recordSetVar="accountCreate">
+    <apex:includeLightning />
+    <div id="lightning"></div>
+
+    <script>
+        if(SfdcApp.projectOneNavigator) {
+            SfdcApp.projectOneNavigator.fireContainerEvent(
+                "force:navigateToComponent",
+                {
+                    componentDef: 'c:insertAccount',
+                    componentAttributes: {
+                        IsInitialPage : true
+                    }
+                }
+            );
+        }
+
+    </script>
+</apex:page>

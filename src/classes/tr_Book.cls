@@ -36,13 +36,14 @@ public with sharing class tr_Book extends TriggerHandler{
         for(Book__c book : listNew){
             book.TotalVolume__c = '0';
 
-            if(keyNum >= 1000){
-                book.S_OriginalKey__c = 'B' + String.valueOf(keyNum + 1);
-            }else{
-                book.S_OriginalKey__c = 'B0' + String.valueOf(keyNum + 1);
+            if(String.isEmpty(book.S_OriginalKey__c)){
+                if(keyNum >= 1000){
+                    book.S_OriginalKey__c = 'B' + String.valueOf(keyNum + 1);
+                }else{
+                    book.S_OriginalKey__c = 'B0' + String.valueOf(keyNum + 1);
+                }
+                keyNum += 1;
             }
-
-            keyNum += 1;
         }
     }
 

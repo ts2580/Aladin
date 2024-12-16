@@ -1,0 +1,5 @@
+<apex:page standardController="Lead">
+    <div style="text-align:center;">
+        {!Lead.Email}
+    </div>
+</apex:page>

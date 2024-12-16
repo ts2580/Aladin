@@ -90,8 +90,9 @@
         component.set('v.isBookInsertModalOpen', false);
     },
 
-    fnSearchBookExt: function(component, event, helper){
-        helper.searchBookExt(component, event, helper);
+    fnKeyUp: function(component, event, helper){
+        console.dir('keyCode :: ' + event.keyCode);
+      if(event.keyCode === 13) helper.searchBookExt(component, event, helper);
     },
 
     fnSetBook: function(component, event, helper){

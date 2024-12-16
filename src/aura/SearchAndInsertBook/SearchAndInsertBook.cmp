@@ -101,11 +101,11 @@
         <div class="slds-col slds-size_6-of-12 body">
             <div class="slds-grid slds-m-top_medium">
                 <div class="slds-col slds-size_1-of-2">
-                    <lightning:input label="권 별 도서 검색"
-                                     class="slds-m-left_small"
-                                     placeholder="도서명이나 id를 입력해주세요"
-                                     variant="standard"
-                                     oncommit="{!c.fnSearchBookExt}"
+                    <input
+                            class="slds-m-left_small slds-input slds-m-top_large"
+                            placeholder="도서명이나 id를 입력해주세요"
+                            onkeyup="{!c.fnKeyUp}"
+                            aura:id="searchInput"
                     />
                 </div>
                 <div class="slds-col slds-size_1-of-2">

@@ -1,0 +1,25 @@
+<!--************************************************************************************
+ * File Name   : lwc.cm_ExcelExport
+ * Author      : yr.Lee
+ * Class       : CM_ExcelExportController.cls
+ * Target      :
+ * Description : List View 에서 버튼 클릭 시 VF -> LWC 해당 컴포넌트를 호출하여 엑셀 다운로드
+ * Modification Log
+ * ===================================================================================
+ * Ver      Date            Author              Modification
+ * ===================================================================================
+   1.0      2024-06-20      yr.Lee              Create
+<*************************************************************************************-->
+<!-- Cm Excel Export -->
+<template>
+    <!--스피너-->
+    <div if:true={isSpinnerOpen}
+         role="status"
+         class="slds-spinner slds-spinner_medium slds-spinner_brand"
+         style="z-index:9005"
+    >
+        <span class="slds-assistive-text">Loading...</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+    </div>
+</template>

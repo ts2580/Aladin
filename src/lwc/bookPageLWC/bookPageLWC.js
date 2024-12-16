@@ -14,16 +14,16 @@ import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 
 const bookColumns =  [
     {
-         label: '제목',
-         fieldName: 'bookUrl',
-         type: 'url',
-         typeAttributes: {
-             label: {
-                 fieldName: 'title'
-             },
-             class : 'btn_next'
-         }
-     },
+        label: '제목',
+        fieldName: 'bookUrl',
+        type: 'url',
+        typeAttributes: {
+            label: {
+                fieldName: 'title'
+            },
+            class : 'btn_next'
+        }
+    },
     {
         label: '구매여부',
         fieldName: 'isPurchased',
@@ -47,7 +47,7 @@ const bookColumns =  [
         fieldName: 'bookCoverUrl',
         type: 'image',
         editable: true
-    },
+    }
 ];
 
 export default class BookPageLwc extends LightningElement {

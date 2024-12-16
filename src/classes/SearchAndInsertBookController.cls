@@ -12,6 +12,8 @@ public with sharing class SearchAndInsertBookController {
 
         List<BookByVolume__x> listBook = new List<BookByVolume__x>();
 
+        System.debug(url);
+
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
@@ -175,18 +177,6 @@ public with sharing class SearchAndInsertBookController {
 
         if(response.getStatusCode() == 200) {
 
-            url = ifu.proxyConUrl('library/bookbyvolume/info?title=') + EncodingUtil.urlEncode(objBook.Name__c, 'UTF-8');
-
-            http = new Http();
-            request = new HttpRequest();
-            request.setEndpoint(url);
-            request.setMethod('GET');
-            response = http.send(request);
-
-            System.debug(JSON.serialize(listBooks));
-            System.debug(response.getBody());
-
-            listBooks = (List<BookDTO.BookByVolume>) JSON.deserialize(response.getBody(), List<BookDTO.BookByVolume>.class);
             paramBook = listBooks[0];
             objBook.Seq__c = paramBook.seq;
             objBook.Book__c = paramBook.book;

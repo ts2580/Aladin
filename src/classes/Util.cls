@@ -14,4 +14,14 @@ public with sharing class Util {
         return targetFields.removeEnd(', ');
     }
 
+    public static void getIp(){
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://api.ipify.org');
+        request.setMethod('GET');
+        HttpResponse response = http.send(request);
+        String responseBody = response.getBody();
+        System.debug(responseBody);
+    }
+
 }

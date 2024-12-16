@@ -1,0 +1,118 @@
+.closeIcon {
+    --sds-c-icon-color-foreground-default: white;
+    cursor                               : pointer;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid lightgray;
+    background-color: #ddd;
+    text-align: center;
+}
+
+.data_header {
+    height : 3rem;
+}
+
+td {
+    border: 1px solid lightgray;
+    height: 1rem;
+    padding: 0.5%;
+}
+
+td input {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+
+}
+
+.selectInput {
+    width : 10%;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    padding: 0.4%;
+}
+
+.searchInput {
+    width : 20%;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    padding: 0.5%;
+}
+
+.searchInput2 {
+
+    width : 12%;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    padding: 0.5%;
+}
+.searchInput3 {
+
+    width : 7%;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    padding: 0.5%;
+}
+
+.slds-modal__title {
+    text-align : left;
+    padding-left : 10px;
+    font-weight : bold;
+}
+
+.slds-modal__footer {
+
+    text-align : center;
+
+}
+
+.table_contain{
+    padding-top : 10px;
+}
+
+.slds-col2{
+    padding-right: 12px;
+    width : 20%;
+
+}
+
+.table_text{
+    font-size : 12px;
+}
+
+.dataColumn1{
+    width: 5%;
+}
+
+.dataColumn2{
+    width: 9%;
+}
+
+.dataColumn3{
+    width: 4.5%;
+}
+
+[data-value="삽입성공"] {
+    color: forestgreen;
+    font-weight : bold;
+}
+
+[data-value="업데이트 성공"] {
+    color: royalblue;
+    font-weight : bold;
+}
+
+[data-value2="삽입실패"] {
+    color: chocolate;
+    font-weight : bold;
+}
+
+[data-value="작업중..."] {
+    color: blueviolet;
+    font-weight : bold;
+}
