@@ -98,7 +98,7 @@ public with sharing class IF_Util {
 
     public String proxyConUrl(String oper) {
 
-        String BASE_URL = 'http://www.hsj-nas.kr:3927/' + oper;
+        String BASE_URL = 'https://book.sfdevhub.com/' + oper;
 
         return BASE_URL;
     }

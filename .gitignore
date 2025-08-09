@@ -18,7 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -36,4 +36,15 @@ out/
 ### VS Code ###
 .vscode/
 
-IlluminatedCloud
+IlluminatedCloud/
+
+
+# Added by Illuminated Cloud
+.sf/
+.sfdx/
+.localdev/
+target/
+node_modules/
+/.illuminatedCloud/
+**/tsconfig*.json
+**/*.tsbuildinfo
