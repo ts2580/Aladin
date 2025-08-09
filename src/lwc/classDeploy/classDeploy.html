@@ -1,0 +1,300 @@
+<!--************************************************************************************
+ * File Name   : ClassDeploy.html
+ * Author      : 한성진
+ * Date        : 2025.03.10
+ * Class       :
+ * Target      :
+ * Description : 클래스를 편하게 배포해보자
+ * Modification Log
+ * ===================================================================================
+ * Ver      Date            Author              Modification
+ * ===================================================================================
+   1.0      2025.03.10      한성진               Create
+   1.1      2025.03.11      한성진               클래스 변수 타입 문자열에서 obj로 변경
+   1.2      2025.03.12      한성진               엑셀 붙여넣기로 다건 찾기 추가
+   2.0      2025.06.19      한성진               대소문자 안가리게함
+   2.1      2025.06.25      한성진               Set을 사용한 중복 제거 및 전체 추가 개선
+   2.2      2025.06.30      한성진               마우스 우클릭 컴포넌트 삭제
+   3.0      2025.07.25      한성진               자바 스크립트 코드 리팩토링. 동적으로 바꿈
+<*************************************************************************************-->
+<template>
+    <div class="slds-m-left_medium slds-m-right_medium" style="height:37rem">
+        <div class="slds-grid slds-gutters slds-m-top_medium slds-m-bottom_large" style="height:35rem">
+            <div class="slds-col slds-size_3-of-12 slds-box_border" style="background-color:white">
+
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_3-of-12">
+                        <div class="slds-m-top_large">Metadata 선택</div>
+                    </div>
+                    <div class="slds-col slds-size_9-of-12">
+                        <lightning-combobox
+                                label='class'
+                                variant="label-hidden"
+                                options={listMetadata}
+                                onchange={fnSetMetadata}
+                                class="slds-m-top_medium"
+                                placeholder="배포할 Metadata 선택"
+                                value="APEX"
+                        ></lightning-combobox>
+                    </div>
+                </div>
+
+                <div lwc:if={apexView}>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="slds-m-top_large">Class 검색</div>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                    label='class'
+                                    variant="label-hidden"
+                                    onchange={fnSetClass}
+                                    class="slds-m-top_medium"
+                                    placeholder="EX_C6A020010040Controller"
+                                    data-id="apexClass"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-m-top_medium">
+                            <lightning-button
+                                    variant="brand-outline"
+                                    label="전체 추가"
+                                    data-id="apexClass"
+                                    onclick={setAddAll}
+                            ></lightning-button>
+                        </div>
+                    </div>
+
+                    <div class="slds-scrollable_y" style="height: 28rem">
+                        <template for:each={apexAutoCompleteList} for:item="obj" for:index="idx">
+                            <button
+                                    data-id="apexClass"
+                                    key={obj.Id}
+                                    value={obj}
+                                    onclick={setCode}
+                                    class="slds-button slds-button_neutral setDeployTarget"
+                            >
+                                {obj}
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <div lwc:elseif= {apexTestView}>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="slds-m-top_large">Test Class 검색</div>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                    label='testClass'
+                                    variant="label-hidden"
+                                    onchange={fnSetClass}
+                                    class="slds-m-top_medium"
+                                    placeholder="EX_C6A020010040Controller_test"
+                                    data-id="apexTestClass"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-m-top_medium">
+                            <lightning-button
+                                    variant="brand-outline"
+                                    label="전체 추가"
+                                    data-id="apexTestClass"
+                                    onclick={setAddAll}
+                            ></lightning-button>
+                        </div>
+                    </div>
+
+                    <div class="slds-scrollable_y" style="height: 28rem">
+                        <template for:each={apexTestAutoCompleteList} for:item="obj" for:index="idx">
+                            <button
+                                    data-id="apexTestClass"
+                                    key={obj.Id}
+                                    value={obj}
+                                    onclick={setCode}
+                                    class="slds-button slds-button_neutral setDeployTarget"
+                            >
+                                {obj}
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <div lwc:elseif={LwcView}>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="slds-m-top_large">LWC 검색</div>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                    label='lwc'
+                                    variant="label-hidden"
+                                    onchange={fnSetClass}
+                                    class="slds-m-top_medium"
+                                    placeholder="exC6A020010040"
+                                    data-id="lwc"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-m-top_medium">
+                            <lightning-button
+                                    variant="brand-outline"
+                                    label="전체 추가"
+                                    data-id="lwc"
+                                    onclick={setAddAll}
+                            ></lightning-button>
+                        </div>
+                    </div>
+
+                    <div class="slds-scrollable_y" style="height: 28rem">
+                        <template for:each={lwcAutoCompleteList} for:item="obj" for:index="idx">
+                            <button
+                                    data-id="lwc"
+                                    key={obj.Id}
+                                    value={obj}
+                                    onclick={setCode}
+                                    class="slds-button slds-button_neutral setDeployTarget"
+                            >
+                                {obj}
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+            </div>
+            <div class="slds-box_border slds-col slds-size_9-of-12 slds-m-left_xx-small" style="background-color:white">
+
+                <div class="slds-m-top_large">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning-input
+                                    label='prod'
+                                    variant="label-hidden"
+                                    onchange={setProdAlias}
+                                    class="slds-m-bottom_small"
+                                    placeholder="배포할 org의 Alias를 적어주세요"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                        </div>
+                    </div>
+
+                    <div lwc:if={apexView}>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_8-of-12">
+                                <div class="slds-text-heading_medium"> Class {deployArray.apexClass.size}개</div>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12 slds-m-bottom_xxx-small">
+                                <lightning-button
+                                        data-id="apexClass"
+                                        label="Class 삭제"
+                                        onclick={delAttribute}
+                                        variant="destructive-text"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                        <div class="slds-scrollable_y" style="height: 10rem">
+                            <template for:each={deployArray.apexClass} for:item="obj" for:index="idx">
+                                <lightning-button
+                                        data-id="apexClass"
+                                        key={obj.Id}
+                                        label={obj}
+                                        value={obj}
+                                        onclick={setCode}
+                                ></lightning-button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div lwc:if={apexTestView}>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_8-of-12">
+                                <div class="slds-text-heading_medium"> Test Class {deployArray.apexTestClass.size}개</div>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12 slds-m-bottom_xxx-small">
+                                <lightning-button
+                                        data-id="apexTestClass"
+                                        label="Test Class 삭제"
+                                        onclick={delAttribute}
+                                        variant="destructive-text"
+                                ></lightning-button>
+                            </div>
+                        </div>
+
+                        <div class="slds-scrollable_y" style="height: 10rem">
+                            <template for:each={deployArray.apexTestClass} for:item="obj" for:index="idx">
+                                <lightning-button
+                                        data-id="apexTestClass"
+                                        key={obj.Id}
+                                        label={obj}
+                                        value={obj}
+                                        onclick={setCode}
+                                ></lightning-button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div lwc:if={LwcView}>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_8-of-12">
+                                <div class="slds-text-heading_medium"> LWC {deployArray.lwc.size}개</div>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12 slds-m-bottom_xxx-small">
+                                <lightning-button
+                                        data-id="lwc"
+                                        label="LWC 삭제"
+                                        onclick={delAttribute}
+                                        variant="destructive-text"
+                                ></lightning-button>
+                            </div>
+                        </div>
+
+                        <div class="slds-scrollable_y" style="height: 10rem">
+                            <template for:each={deployArray.lwc} for:item="obj" for:index="idx">
+                                <lightning-button
+                                        data-id="lwc"
+                                        key={obj.Id}
+                                        label={obj}
+                                        value={obj}
+                                        onclick={setCode}
+                                ></lightning-button>
+                            </template>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-12 slds-m-top_large">
+                        <lightning-button
+                                variant="brand"
+                                label="복사"
+                                onclick={fnCopy}
+                        ></lightning-button>
+
+                        <div class="slds-m-top_large">
+                            <lightning-button
+                                    variant="brand"
+                                    label="xml 복사"
+                                    onclick={fnXmlCopy}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_11-of-12">
+                        <div class="slds-m-top_x-large slds-scrollable_y" style="height: 16rem">{deployCode}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--스피너-->
+    <div role="status"
+         class="slds-spinner slds-spinner_large slds-spinner_brand"
+         style="z-index:9005"
+         lwc:if={isSpinnerOpen}
+    >
+        <span class="slds-assistive-text">Loading...</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+    </div>
+</template>

@@ -1048,4 +1048,49 @@ public with sharing class S4_Util {
         notification.send(setUserIds);
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<String> getClass(){
+        List<String> listReturnStrings = new List<String>();
+        List<ApexClass> listApexClasses = [
+                SELECT Id, Name
+                FROM ApexClass
+        ];
+        for (ApexClass obj : listApexClasses) {
+            listReturnStrings.add(obj.Name);
+        }
+        return listReturnStrings;
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static List<String> getLwc(){
+        List<String> listReturnStrings = new List<String>();
+        String toolingSoql =
+                'SELECT LightningComponentBundle.DeveloperName ' +
+                        'FROM LightningComponentResource ' +
+                        'WHERE ManageableState =\'unmanaged\' ' +
+                        'group by LightningComponentBundle.DeveloperName ' +
+                        'ORDER BY LightningComponentBundle.DeveloperName ';
+        String toolingSoqlSafe = EncodingUtil.urlEncode(toolingSoql, 'UTF-8');
+        String INSTANCE_URL = Url.getOrgDomainUrl().toExternalForm() + '/services/data/v62.0/tooling/query/?q=' + toolingSoqlSafe;
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(INSTANCE_URL);
+        req.setMethod('GET');
+        if (Test.isRunningTest()) {
+            req.setHeader('Authorization', 'Bearer 12345');
+        } else {
+            req.setHeader('Authorization', 'Bearer ' + Page.VF_SessionId.getContent().toString());
+        }
+        req.setHeader('Content-Type', 'application/json');
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        Map<String,Object> mapReturn = (Map<String,Object>) JSON.deserializeUntyped(res.getBody());
+        List<Object> listObject = (List<Object>) mapReturn.get('records');
+        Map<String,Object> dn;
+        for (Object obj : listObject) {
+            dn = (Map<String,Object>) obj;
+            listReturnStrings.add(String.valueOf(dn.get('DeveloperName')));
+        }
+        return listReturnStrings;
+    }
+
 }
