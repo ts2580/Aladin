@@ -179,6 +179,14 @@
                         </div>
                     </div>
 
+                    <lightning-button
+                         class="slds-float_right"
+                         data-id="clearAll"
+                         label="전체 삭제"
+                         onclick={delAttribute}
+                         variant="destructive-text"
+                     ></lightning-button>
+
                     <div lwc:if={apexView}>
                         <div class="slds-grid slds-gutters">
                             <div class="slds-col slds-size_8-of-12">
