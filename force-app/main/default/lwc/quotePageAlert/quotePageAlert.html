@@ -1,0 +1,23 @@
+<!--************************************************************************************
+ * File Name   : lwc.quotePageAlert
+ * Author      : yr.Lee
+ * Class       :
+ * Target      :
+ * Description :
+ * Modification Log
+ * ===================================================================================
+ * Ver      Date            Author              Modification
+ * ===================================================================================
+   1.0      2025-03-28      yr.Lee              Create
+<*************************************************************************************-->
+<!-- Quote Page Alert -->
+<template>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_9-of-12">
+            <div>견적의 고객 협의가 완료되었으나, 견적의 성약이 체결 전 상태입니다. 성약 체결을 원하시면 버튼을 눌러주세요</div>
+        </div>
+        <div class="slds-col slds-size_3-of-12">
+            <lightning-button label="성약체결" onclick={fnOpenOpptyModal}></lightning-button>
+        </div>
+    </div>
+</template>

@@ -1,50 +1,8 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# 기본 무시
+*
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea/
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-IlluminatedCloud/
-
-
-# Added by Illuminated Cloud
-.sf/
-.sfdx/
-.localdev/
-target/
-node_modules/
-/.illuminatedCloud/
-**/tsconfig*.json
-**/*.tsbuildinfo
+# force-app, .gitignore, README.md만 추적
+!/force-app/
+!/force-app/**
+!.gitignore
+!README.md

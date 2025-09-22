@@ -270,12 +270,8 @@ export default class ClassDeploy extends LightningElement {
 
     delAttribute(e){
         const dataId = e.target.getAttribute('data-id');
-        
-        if(dataId === 'clearAll'){
-            for(let key in this.deployArray) this.deployArray[key] = new Set();
-        }else{
-            this.deployArray[dataId] = new Set();
-        }
+
+        this.deployArray[dataId] = new Set();
 
         this.makeCliCode();
     }
