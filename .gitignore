@@ -6,3 +6,15 @@
 !/force-app/**
 !.gitignore
 !README.md
+
+# Added by Illuminated Cloud
+.sf/
+.sfdx/
+.localdev/
+/IlluminatedCloud/
+/out/
+target/
+node_modules/
+/.illuminatedCloud/
+**/tsconfig*.json
+**/*.tsbuildinfo

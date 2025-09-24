@@ -1,0 +1,176 @@
+<!--
+ - Created by SungJin on 25. 9. 25..
+ -->
+
+<!-- Srch And Isrt Book -->
+<template>
+    <div class="slds-grid gridDiv">
+        <!-- 왼쪽 영역 -->
+        <div class="slds-col slds-size_6-of-12 body slds-border_right">
+            <div class="slds-grid slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input label="도서 검색"
+                                     class="slds-m-left_small"
+                                     placeholder="도서명을 입력해주세요"
+                                     variant="label-hidden"
+                                     oncommit={fnSearchBook}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-button label="새 책 삽입"
+                                      variant="neutral"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                                      onclick={fnOpenBookInsertModal}
+                    ></lightning-button>
+                    <lightning-button label="검색창 비우기"
+                                      variant="destructive"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                                      onclick={fnClearBookInt}
+                    ></lightning-button>
+                </div>
+            </div>
+            <template for:item="objBook" for:each={listBook} for:index="idx">
+                <lightning-record-edit-form object-api-name="Book__c"
+                                            class="slds-m-around_small slds-box_border"
+                                            onsuccess={fnHandleSuccess}
+                                            onerror={fnHandleError}
+                                            key={objBook.Id}
+                                            record-id={objBook.Id}>
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_4-of-12">
+                            <img src={objBook.Cover__c} class="img slds-float_right slds-m-top_xx-small" alt=""/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12">
+
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input value={objBook.Id} label="Id" variant="label-inline" disabled="true"></lightning-input>
+                            <lightning-input-field field-name="Name"></lightning-input-field>
+                            <lightning-input-field field-name="Type__c"></lightning-input-field>
+                            <lightning-input-field field-name="Cover__c"></lightning-input-field>
+                            <lightning-input value={objBook.Order__c} label="순번" variant="label-inline" disabled="true"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-m-top_xx-large">
+                            <lightning-button class="slds-m-bottom_small slds-m-left_xx-small submitBtn"
+                                              label="&ensp;IF&ensp;"
+                                              variant="success"
+                                              value={objBook.Name}
+                                              onclick={fnDoIf}
+                            ></lightning-button>
+                            <lightning-button class="submitBtn"
+                                              type="submit"
+                                              label="save"
+                                              variant="brand"
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+        </div>
+
+        <!-- 오른쪽 영역 -->
+        <div class="slds-col slds-size_6-of-12 body">
+            <div class="slds-grid slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input
+                            label="Heroku에서 권 단위 도서 검색"
+                            class="slds-m-left_small"
+                            placeholder="Heroku에서 권 단위 도서 검색. 도서명이나 id를 입력해주세요"
+                            onkeyup={fnKeyUp}
+                            data-id="searchInput"
+                            variant="label-hidden"
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-button label="권 별로 책 삽입"
+                                      variant="neutral"
+                                      onclick={fnOpenBookExtInsertModal}
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                    ></lightning-button>
+                    <lightning-button label="최근 삽입한 책"
+                                      variant="neutral"
+                                      onclick={fnShowInsertedBook}
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                    ></lightning-button>
+                    <lightning-button label="검색창 비우기"
+                                      variant="destructive"
+                                      class="saveBtn slds-m-top_large slds-m-left_large"
+                                      onclick={fnClearBookExt}
+                    ></lightning-button>
+                </div>
+                <template for:item="objBook" for:each={listBookExt} for:index="idx">
+                    <lightning-record-edit-form object-api-name="BookByVolume__x"
+                                                class="slds-m-around_small slds-box_border"
+                                                onsuccess={fnHandleSuccess}
+                                                onerror={fnHandleError}
+                                                key={objBook.Id}
+                                                record-id={objBook.Id}
+                    >
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-12">
+                                <img src={objBook.Cover__c} class="img slds-float_right slds-m-top_xx-small" style="margin-bottom: 7px;" alt=""/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-12">
+
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning-input-field value={objBook.Price__c} field-name="Price__c"></lightning-input-field>
+                                <div>
+                                    <lightning-input
+                                            checked={objBook.IsPurchased__c}
+                                            type="checkbox"
+                                            variant="label-inline"
+                                            label="구입여부"
+                                    ></lightning-input>
+                                </div>
+                                <lightning-input-field value={objBook.Cover__c} field-name="Cover__c"></lightning-input-field>
+                                <lightning-input-field value={objBook.Book__c} field-name="Book__c"></lightning-input-field>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning-input-field value={objBook.Type__c} field-name="Type__c"></lightning-input-field>
+                                <lightning-input-field value={objBook.Name__c} field-name="Name__c"></lightning-input-field>
+                                <lightning-input-field value={objBook.Volume__c} field-name="Volume__c"></lightning-input-field>
+                            </div>
+                            <div class="slds-col slds-size_1-of-12">
+                                <lightning-button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                                  label="&ensp;&ensp;IF&ensp;&ensp;"
+                                                  variant="success"
+                                                  value={objBook}
+                                                  onclick={fnDoIfExt}
+                                ></lightning-button>
+                                <lightning-button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                                  label="&nbsp;새 책&nbsp;"
+                                                  variant="success"
+                                                  value={objBook.Link__c}
+                                                  onclick={fnGoAla}
+                                ></lightning-button>
+                                <lightning-button class="slds-m-bottom_small slds-m-left_xx-small submitBtnExt"
+                                                  label="Delete"
+                                                  variant="destructive"
+                                                  value={objBook.Id__c}
+                                                  onclick={fnDeleteBook}
+                                ></lightning-button>
+                                <lightning-button class="submitBtnExt"
+                                                  onclick={fnSetBook}
+                                                  value={objBook}
+                                                  label="&nbsp;&nbsp;save&nbsp;&nbsp;"
+                                                  variant="brand"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </lightning-record-edit-form>
+                </template>
+            </div>
+            <!--스피너-->
+            <div role="status"
+                 class="slds-spinner slds-spinner_large slds-spinner_brand"
+                 style="z-index:9005"
+                 lwc:if={isSpinnerOpen}
+            >
+                <span class="slds-assistive-text">Loading...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </div>
+</template>
