@@ -1,7 +1,18 @@
-성진 세일즈포스 개발 연습겸 도서 관리 프로젝트
+# Salesforce DX Project: Next Steps
 
-* Language : APEX
-* FrameWork : AURA, LWC, VisualForce
-* Database : Salesforce DB, HEROKU Postgres
+Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
 
-자바 중계서버에 재고 데이터를 알라딘 OpenAPI로 요청. 그 데이터를 Heroku 테이블에 붇고, 이를 External Object로 세일즈포스에 가져 옴. 전체적인 View는 LWC로 구성 
+## How Do You Plan to Deploy Your Changes?
+
+Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+
+## Configure Your Salesforce DX Project
+
+The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+
+## Read All About It
+
+- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
+- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
+- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
+- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
