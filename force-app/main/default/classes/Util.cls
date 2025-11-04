@@ -24,4 +24,19 @@ public with sharing class Util {
         System.debug(responseBody);
     }
 
+    public class BookInfoCache implements Cache.CacheBuilder {
+        public Object doLoad(String key) {
+
+            System.debug('해당 ' + key + ' 라는 키가 없음');
+
+            Cache.OrgPartition orgPart = Cache.Org.getPartition('local.book');
+
+            String returnValue = '퇴사하는법';
+
+            orgPart.put(key,  returnValue, 7200, Cache.VISIBILITY.NAMESPACE, true);
+
+            return returnValue;
+        }
+    }
+
 }
