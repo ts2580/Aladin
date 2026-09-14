@@ -1,35 +1,19 @@
-/**
- * Created by HSJ on 24. 11. 2..
- */
-
 @IsTest
-public with sharing class SalesforceCredentialDTO_test {
+private class SalesforceCredentialDTO_Test {
+  @IsTest
+  static void convertsSyneboCredentials() {
+    String payload =
+      '{"groups":[{"Name":"개발","credentials":[' +
+      '{"Name":"Aladin","SfName":"user@example.com","Password":"secret",' +
+      '"Type":{"Id":"Production"}}]}]}';
 
-    @IsTest
-    static void testSalesforceCredentialDTO() {
+    String converted = SalesforceCredentialDTO.transSyneboToCredential(payload);
 
-
-        LoginsbySyneboDTO.Groups groupDTO = new LoginsbySyneboDTO.Groups();
-        LoginsbySyneboDTO.Credential credential = new LoginsbySyneboDTO.Credential();
-        LoginsbySyneboDTO.Type type = new LoginsbySyneboDTO.Type();
-        type.Id = 'trstyq';
-        credential.Name = '성진';
-        credential.Password = '성진';
-        credential.SfName = '성진';
-        credential.Type = type;
-
-        groupDTO.credentials = new List<LoginsbySyneboDTO.Credential>{credential};
-
-
-        List<LoginsbySyneboDTO.Groups> listGroupDTO = new List<LoginsbySyneboDTO.Groups>{groupDTO};
-
-        LoginsbySyneboDTO dto = new LoginsbySyneboDTO();
-        dto.groups = listGroupDTO;
-
-        String syneboCredentials = JSON.serializePretty(dto);
-
-        SalesforceCredentialDTO.transSyneboToCredential(syneboCredentials);
-
-
-    }
+    System.assert(converted.contains('"group"'));
+    System.assert(converted.contains('"environmentType" : "login"'));
+    List<SalesforceCredentialDTO.Credential> credentials = SalesforceCredentialDTO.getCredentials(
+      '[{"name":"Aladin","username":"user@example.com"}]'
+    );
+    System.assertEquals('Aladin', credentials[0].name);
+  }
 }

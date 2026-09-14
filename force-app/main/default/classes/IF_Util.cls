@@ -3,116 +3,136 @@
  */
 
 public with sharing class IF_Util {
+  private final static String AladinUrl = 'http://www.aladin.co.kr/ttb/api/';
 
-    public String getBookInfoURL(String searchWord) {
+  public String getBookInfoURL(String searchWord) {
+    String BASE_URL = AladinUrl + 'ItemSearch.aspx?';
 
-        String BASE_URL = 'http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?';
+    Map<String, String> paramMap = new Map<String, String>();
+    paramMap.put('ttbkey', 'ttbtrstyq0151001');
+    paramMap.put('Query', EncodingUtil.urlEncode(searchWord, 'UTF-8'));
+    paramMap.put('Sort', 'PublishTime');
+    paramMap.put('QueryType', 'Title'); // Title Autohr
+    paramMap.put('MaxResults', '50');
+    paramMap.put('start', '1');
+    paramMap.put('Cover', 'Big');
+    paramMap.put('SearchTarget', 'Book');
+    paramMap.put('output', 'JS');
+    paramMap.put('Version', '20131101');
 
-        Map<String, String> paramMap = new Map<String, String>();
-        paramMap.put('ttbkey', 'ttbtrstyq0151001');
-        paramMap.put('Query', EncodingUtil.urlEncode(searchWord, 'UTF-8'));
-        paramMap.put('Sort', 'PublishTime');
-        paramMap.put('QueryType', 'Title'); // Title Autohr
-        paramMap.put('MaxResults', '50');
-        paramMap.put('start', '1');
-        paramMap.put('Cover', 'Big');
-        paramMap.put('SearchTarget', 'Book');
-        paramMap.put('output', 'JS');
-        paramMap.put('Version', '20131101');
+    String URL = BASE_URL;
+    Iterator<String> iter = paramMap.keySet().iterator();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      String value = paramMap.get(key);
 
-        String URL = BASE_URL;
-        Iterator<String> iter = paramMap.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            String value = paramMap.get(key);
-
-            URL += key + '=' + value + '&';
-        }
-
-        return URL;
+      URL += key + '=' + value + '&';
     }
 
+    return URL;
+  }
 
-    public String getDropshippingUsedBookURL(String ISBN13) {
+  public String getDropshippingUsedBookURL(String ISBN13) {
+    String BASE_URL = AladinUrl + 'ItemLookUp.aspx?';
 
-        String BASE_URL = 'http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?';
+    Map<String, String> paramMap = new Map<String, String>();
+    paramMap.put('ttbkey', 'ttbtrstyq0151001');
+    paramMap.put('ItemId', EncodingUtil.urlEncode(ISBN13, 'UTF-8'));
+    paramMap.put('itemIdType', 'ISBN13');
+    paramMap.put('OptResult', 'usedList');
+    paramMap.put('output', 'JS');
+    paramMap.put('Version', '20131101');
 
-        Map<String, String> paramMap = new Map<String, String>();
-        paramMap.put('ttbkey', 'ttbtrstyq0151001');
-        paramMap.put('ItemId', EncodingUtil.urlEncode(ISBN13, 'UTF-8'));
-        paramMap.put('itemIdType', 'ISBN13');
-        paramMap.put('OptResult', 'usedList');
-        paramMap.put('output', 'JS');
-        paramMap.put('Version', '20131101');
+    String URL = BASE_URL;
+    Iterator<String> iter = paramMap.keySet().iterator();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      String value = paramMap.get(key);
 
-        String URL = BASE_URL;
-        Iterator<String> iter = paramMap.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            String value = paramMap.get(key);
-
-            URL += key + '=' + value + '&';
-        }
-
-        return URL;
+      URL += key + '=' + value + '&';
     }
 
-    public String getUsedBookInfoURL(String ISBN13) {
+    return URL;
+  }
 
-        String BASE_URL = 'http://www.aladin.co.kr/ttb/api/ItemOffStoreList.aspx?';
+  public String getUsedBookInfoURL(String ISBN13) {
+    String BASE_URL = AladinUrl + 'ItemOffStoreList.aspx?';
 
-        Map<String, String> paramMap = new Map<String, String>();
-        paramMap.put('ttbkey', 'ttbtrstyq0151001');
-        paramMap.put('ItemId', EncodingUtil.urlEncode(ISBN13, 'UTF-8'));
-        paramMap.put('itemIdType', 'ISBN13');
-        paramMap.put('output', 'JS');
-        paramMap.put('Version', '20131101');
+    Map<String, String> paramMap = new Map<String, String>();
+    paramMap.put('ttbkey', 'ttbtrstyq0151001');
+    paramMap.put('ItemId', EncodingUtil.urlEncode(ISBN13, 'UTF-8'));
+    paramMap.put('itemIdType', 'ISBN13');
+    paramMap.put('output', 'JS');
+    paramMap.put('Version', '20131101');
 
-        String URL = BASE_URL;
-        Iterator<String> iter = paramMap.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            String value = paramMap.get(key);
+    String URL = BASE_URL;
+    Iterator<String> iter = paramMap.keySet().iterator();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      String value = paramMap.get(key);
 
-            URL += key + '=' + value + '&';
-        }
-
-        return URL;
+      URL += key + '=' + value + '&';
     }
 
-    public Map<String, Id> getBranch() {
+    return URL;
+  }
 
-        Map<String, Id> BranchNameIdMap = new Map<String, Id>();
+  public String getRecentBook(Integer page, Integer categoryId) {
+    String BASE_URL = AladinUrl + 'ItemList.aspx?';
 
-        List<Branch__c> ListBranch = [
-                SELECT Id, Name
-                FROM Branch__c
-        ];
+    Map<String, Object> paramMap = new Map<String, Object>();
+    paramMap.put('ttbkey', 'ttbtrstyq0151001');
+    paramMap.put('QueryType', 'ItemNewAll');
+    paramMap.put('SearchTarget', 'Book');
+    paramMap.put('Start', page);
+    paramMap.put('MaxResults', 50);
+    paramMap.put('Cover', 'Big');
+    paramMap.put('output', 'JS');
+    paramMap.put('CategoryId', categoryId);
+    paramMap.put('Version', '20131101');
 
-        for(Branch__c B : ListBranch){
-            BranchNameIdMap.put(B.Name, B.Id);
-        }
+    String URL = BASE_URL;
+    Iterator<String> iter = paramMap.keySet().iterator();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      Object value = paramMap.get(key);
 
-        return BranchNameIdMap;
+      URL += key + '=' + value + '&';
     }
 
-    public String proxyConUrl(String oper) {
+    return URL;
+  }
 
-        String BASE_URL = 'https://book.sfdevhub.com/' + oper;
+  public Map<String, Id> getBranch() {
+    Map<String, Id> BranchNameIdMap = new Map<String, Id>();
 
-        return BASE_URL;
+    List<Branch__c> ListBranch = [
+      SELECT Id, Name
+      FROM Branch__c
+    ];
+
+    for (Branch__c B : ListBranch) {
+      BranchNameIdMap.put(B.Name, B.Id);
     }
 
-    public String getMyIp(){
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://api.ipify.org');
-        request.setMethod('GET');
-        HttpResponse response = http.send(request);
-        String responseBody = response.getBody();
-        System.debug(responseBody);
+    return BranchNameIdMap;
+  }
 
-        return responseBody;
-    }
+  public String proxyConUrl(String oper) {
+    String BASE_URL = 'https://book.sfdevhub.com/' + oper;
 
+    return BASE_URL;
+  }
+
+  public String getMyIp() {
+    Http http = new Http();
+    HttpRequest request = new HttpRequest();
+    request.setEndpoint('https://api.ipify.org');
+    request.setMethod('GET');
+    HttpResponse response = http.send(request);
+    String responseBody = response.getBody();
+    System.debug(responseBody);
+
+    return responseBody;
+  }
 }

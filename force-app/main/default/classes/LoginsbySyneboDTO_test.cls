@@ -1,31 +1,19 @@
-/**
- * Created by HSJ on 24. 11. 2..
- */
-
 @IsTest
-public with sharing class LoginsbySyneboDTO_test {
+private class LoginsbySyneboDTO_Test {
+  @IsTest
+  static void deserializesExportedCredentials() {
+    String payload =
+      '{"groups":[{"Name":"개발","credentials":[' +
+      '{"Name":"Aladin","SfName":"user@example.com","Password":"secret",' +
+      '"Type":{"Id":"Production"}}]}]}';
 
-    @IsTest
-    static void testGetSynebo() {
+    LoginsbySyneboDTO result = LoginsbySyneboDTO.getSynebo(payload);
 
-        LoginsbySyneboDTO.Groups groupDTO = new LoginsbySyneboDTO.Groups();
-        LoginsbySyneboDTO.Credential credential = new LoginsbySyneboDTO.Credential();
-        LoginsbySyneboDTO.Type type = new LoginsbySyneboDTO.Type();
-        type.Id = 'trstyq';
-        credential.Name = '성진';
-        credential.Password = '성진';
-        credential.SfName = '성진';
-        credential.Type = type;
-
-        groupDTO.credentials = new List<LoginsbySyneboDTO.Credential>{credential};
-
-
-        // JSON 문자열을 객체로 파싱
-        LoginsbySyneboDTO.getSynebo(JSON.serializePretty(groupDTO));
-
-
-    }
-
-
-
+    System.assertEquals('개발', result.groups[0].Name);
+    System.assertEquals(
+      'user@example.com',
+      result.groups[0].credentials[0].SfName
+    );
+    System.assertEquals('Production', result.groups[0].credentials[0].Type.Id);
+  }
 }

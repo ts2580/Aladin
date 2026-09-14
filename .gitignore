@@ -46,3 +46,19 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+# Added by Illuminated Cloud
+/IlluminatedCloud/
+/out/
+target/
+/.illuminatedCloud/
+**/tsconfig*.json
+**/*.tsbuildinfo
+**/graphql.config.yml
+
+.idea
+.illuminatedCloud
+IlluminatedCloud
+.husky
+.vscode
+config

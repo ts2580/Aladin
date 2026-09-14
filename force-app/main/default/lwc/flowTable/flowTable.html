@@ -1,0 +1,29 @@
+<!--
+ - Created by trsty on 26. 1. 2..
+ -->
+
+<!-- Flow Table -->
+<template>
+  <lightning-card title="선행기술">
+    <template for:each={arrayTemp4} for:item="row" for:index="idx">
+      <div key={row.Id} class="slds-p-around_small slds-border_bottom">
+        <lightning-input
+          label="선행기술"
+          value={row.Name}
+          data-idx={idx}
+          data-id="Name"
+          onchange={handleChange}
+        >
+        </lightning-input>
+        <lightning-input
+          label="등급"
+          value={row.Grade__c}
+          data-idx={idx}
+          data-id="Grade__c"
+          onchange={handleChange}
+        >
+        </lightning-input>
+      </div>
+    </template>
+  </lightning-card>
+</template>
